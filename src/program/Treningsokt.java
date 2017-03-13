@@ -11,7 +11,7 @@ public class Treningsokt{
 	int prestasjon;
 	String notat;
 	
-	public ovelse(long trening_id,Date dato, Time tidspunkt, long varighet, String form,int prestasjon,String notat) throws exeption{
+	public Treningsokt(long trening_id,Date dato, Time tidspunkt, long varighet, String form,int prestasjon,String notat) throws exeption{
 		this.trening_id=trening_id;
 		this.dato=dato;
 		this.tidspunkt=tidspunkt;
