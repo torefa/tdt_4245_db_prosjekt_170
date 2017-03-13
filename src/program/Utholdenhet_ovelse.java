@@ -5,7 +5,7 @@ public class Utholdenhet_ovelse extends Ovelse{
 	long tid_min;
 	
 	public Utholdenhet_ovelse(long ovelse_id, String navn, String beskrivelse,long distanse_km,long tig_min){
-		Super(ovelse_id,navn,beskrivelse);
+		super(ovelse_id,navn,beskrivelse);
 		this.distanse_km=distanse_km;
 		this.tid_min=tid_min;
 	}
