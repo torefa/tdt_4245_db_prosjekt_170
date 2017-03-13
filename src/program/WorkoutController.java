@@ -1,7 +1,10 @@
 package program;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,6 +18,9 @@ import javafx.scene.control.TextField;
 public class WorkoutController implements AppBinder{
 
 	MainApp main;
+	
+	// attributes to make life easier
+	ObservableList<Ovelse> ovInCollection = FXCollections.observableArrayList();
 	
 	// treningsokt pane
 	@FXML TextField treningsokt_navn;
@@ -30,7 +36,7 @@ public class WorkoutController implements AppBinder{
 	
 	
 	// "Øvelser lagt til i treningsøkten" pane
-	@FXML ListView ovelserIn;
+	@FXML ListView<Ovelse> ovelserIn;
 	@FXML Button slettOvelseIn;
 	
 	
@@ -46,7 +52,7 @@ public class WorkoutController implements AppBinder{
 	
 	
 	// "Tidliger øvelser" pane
-	@FXML ListView ovelserOut;
+	@FXML ListView<Ovelse> ovelserOut;
 	@FXML Button slettOvelseOut;
 	@FXML Button leggTilIn;
 	
@@ -54,13 +60,115 @@ public class WorkoutController implements AppBinder{
 	@FXML
 	private void initialize(){
 		// treningsokt pane init
-
+		
+		// set numbers for hours and minutes in the selectors
 		ObservableList<Integer> hours = FXCollections.observableArrayList();
 		for(int i = 0; i < 24; i++){
 			hours.add(i);
 		}
 		hour.setItems((FXCollections.observableArrayList(hours)));
 		
+		ObservableList<Integer> minutes = FXCollections.observableArrayList();
+		for(int m = 0; m < 60; m++){
+			minutes.add(m);
+		}
+		min.setItems(minutes);
+		
+		// restrict the "varighet" field only to take numbers
+		// restriction on text field
+		varighet.textProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (!newValue.matches("\\d*")) {
+					varighet.setText(newValue.replaceAll("[^\\d]", ""));
+				}
+			}
+		});
+		
+
+		// set the 1-10 values in form and prestasjon
+		ObservableList<Integer> oneToTen = FXCollections.observableArrayList();
+		for(int i = 1; i < 11; i++){
+			oneToTen.add(i);
+		}
+		
+		form.setItems(oneToTen);
+		prestasjon.setItems(oneToTen);
+		
+		// dunno what we should use the "type aktivitet" for when we register out workout.
+		
+		// ovelser added to our workout pane
+		
+		// TODO: implement classes for ovelser.
+		
+		// Create Ovelse pane
+		
+		
+		// TODO: set kategori ChoiceBox
+		
+		// sets the type of ovelse in the choicebox
+		ObservableList<String> ovelseType = FXCollections.observableArrayList(
+				"Styrke", "Kondisjon", "Utholdenhet");
+		type_ovelse.setItems(ovelseType);
+		
+		// restricts belastning, reps and sett to only type ints
+		styrke_belastning.textProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (!newValue.matches("\\d*")) {
+					styrke_belastning.setText(newValue.replaceAll("[^\\d]", ""));
+				}
+			}
+		});
+		styrke_rep.textProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (!newValue.matches("\\d*")) {
+					styrke_rep.setText(newValue.replaceAll("[^\\d]", ""));
+				}
+			}
+		});
+		styrke_sett.textProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (!newValue.matches("\\d*")) {
+					styrke_sett.setText(newValue.replaceAll("[^\\d]", ""));
+				}
+			}
+		});
+		
+		
+		
+		// button listeners
+		
+		// add new ovelse to database and list
+		registrer_ovelse.setOnAction(e -> addOvelseOut());
+		
+		
+		
+	}
+	
+	public void updateKategori(String[] kategorier){
+		kategori.setItems(FXCollections.observableArrayList(kategorier));
+		
+	}
+	
+	public void updatePrevOvelse(Collection<Ovelse> ovelser){
+		ovelserOut.setItems(FXCollections.observableArrayList(ovelser));
+	}
+	
+	private void addOvelseIn(Ovelse ov){
+		ovInCollection.add(ov);
+		ovelserIn.setItems(ovInCollection);
+	}
+	
+	private void removeOvelseIn(Ovelse ov){
+		ovInCollection.remove(ov);
+		ovelserIn.setItems(ovInCollection);
+	}
+	
+	private void addOvelseOut(){
+		// TODO: check if fields are empty, return if they are
 		
 	}
 	

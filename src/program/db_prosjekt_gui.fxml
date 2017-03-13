@@ -43,7 +43,7 @@
             <Text layoutX="10.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Navn" />
             <Button fx:id="registrer_okt" disable="true" layoutX="16.0" layoutY="519.0" mnemonicParsing="false" text="Registrer økt" />
             <Text layoutX="11.0" layoutY="453.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Type aktivitet" />
-            <ChoiceBox fx:id="type_aktivitet" layoutX="12.0" layoutY="463.0" prefHeight="25.0" prefWidth="174.0" />
+            <ChoiceBox fx:id="type_aktivitet" disable="true" layoutX="12.0" layoutY="463.0" prefHeight="25.0" prefWidth="174.0" />
          </children>
       </Pane>
       <Pane prefHeight="200.0" prefWidth="200.0">
