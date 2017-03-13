@@ -1,0 +1,37 @@
+
+//Insert treningsøkt
+insert into `treningsøkt`
+  values({0},{1},{2},{3},${4});
+
+SET t_id = LAST_INSERT_ID();
+
+insert into `treningsøkt_har_øving`
+  values(t_id,{0});
+
+//Insert utendør
+insert into `utendør_aktivitet`
+  values(t_id,{0},{1});
+
+//Insert indore
+insert into `innendør_aktivitet`
+  values(t_id,{0},{1});
+
+
+//Insert øvelse
+insert into `øving`
+  values({0},{1},{2},{3},{4},{5});
+
+SET o_id = LAST_INSERT_ID();
+
+//Insert kat for øvelse
+insert into `øvelse_har_kategori`
+  values(o_id,{0});
+
+//Insert styrke
+insert into `styrke_kond_øvelse`
+  values(o_id,{0},{1},{2},{3});
+
+//Insert utholdenhet
+insert into `utholdenhet_øvelse`
+  values(o_id,{0},{1});
+
