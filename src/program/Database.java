@@ -10,16 +10,6 @@ import java.util.Map;
 
 
 
-/**
- * @author pgjerstad
- *
- * For å bruke koblingen mot MySQL må alle som skal kjøre ServerMain, egentlig Database, ha mysql-connector-java-5.1.40-bin.jar på classpath.
- * 
- * jdbc-URLen krever DatabaseKey.java som ikke er sjekket inn i git.
- * 
- */
-
-
 public class Database implements AutoCloseable {
 	private Connection conn = null;
 	private static String KEY_URL = DatabaseKey.KEY_URL;
@@ -44,7 +34,10 @@ public class Database implements AutoCloseable {
 			if(st.execute(query)){
 				return 0;
 			}
+		}catch(SQLException ex){
+			ex.printStackTrace();
 		}
+		return 0;
 	}
 	
 	
