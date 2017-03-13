@@ -33,8 +33,8 @@ public class MainApp extends Application{
 			primaryStage.setScene(scene);
 			primaryStage.show();
 			
-			// give controller access to main app
-			//AppBinder controller = loader.getController();
+			// give controller access to main app, so we can point at database etc
+			AppBinder controller = loader.getController();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
