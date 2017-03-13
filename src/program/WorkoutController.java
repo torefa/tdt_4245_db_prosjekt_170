@@ -1,5 +1,7 @@
 package program;
 
+import java.util.ArrayList;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,13 +19,13 @@ public class WorkoutController implements AppBinder{
 	// treningsokt pane
 	@FXML TextField treningsokt_navn;
 	@FXML DatePicker dato;
-	@FXML ChoiceBox hour;
-	@FXML ChoiceBox min;
+	@FXML ChoiceBox<Integer> hour;
+	@FXML ChoiceBox<Integer> min;
 	@FXML TextField varighet;
-	@FXML ChoiceBox form;
-	@FXML ChoiceBox prestasjon;
+	@FXML ChoiceBox<Integer> form;
+	@FXML ChoiceBox<Integer> prestasjon;
 	@FXML TextArea notat;
-	@FXML ChoiceBox type_aktivitet;
+	@FXML ChoiceBox<String> type_aktivitet;
 	@FXML Button registrer_okt;
 	
 	
@@ -35,8 +37,8 @@ public class WorkoutController implements AppBinder{
 	// Øvelse creation pane
 	@FXML TextField ovelse_navn;
 	@FXML TextArea ovelse_beskrivelse;
-	@FXML ChoiceBox kategori;
-	@FXML ChoiceBox type_ovelse;
+	@FXML ChoiceBox<String> kategori;
+	@FXML ChoiceBox<String> type_ovelse;
 	@FXML TextField styrke_belastning;
 	@FXML TextField styrke_rep;
 	@FXML TextField styrke_sett;
@@ -52,8 +54,14 @@ public class WorkoutController implements AppBinder{
 	@FXML
 	private void initialize(){
 		// treningsokt pane init
-		hour.setItems((FXCollections.observableArrayList(
-				0, 1, 2 , 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23)));
+
+		ObservableList<Integer> hours = FXCollections.observableArrayList();
+		for(int i = 0; i < 24; i++){
+			hours.add(i);
+		}
+		hour.setItems((FXCollections.observableArrayList(hours)));
+		
+		
 	}
 	
 	@Override
