@@ -1,9 +1,11 @@
 package program;
 import java.sql.Connection;
+import java.util.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Time;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +25,10 @@ public class Database implements AutoCloseable {
 		for(Kategori i : d.getKategorier()){
 			System.out.println(i.getFullName());
 		}
+		//public Treningsokt(long trening_id,Date dato, Time tidspunkt, long varighet, String form,int prestasjon,String notat) throws IndexOutOfBoundsException{
+		Treningsokt test = 	new Treningsokt(-1L, new Date(0), new Time(10,30,5), 9, "Good", 5, "Shits good");
+		test.addOvelse(new Ovelse(1, "...", "..."));
+		d.insertTreningsOkt(test);
 	}
 	
 	public boolean connect() {
@@ -36,25 +42,27 @@ public class Database implements AutoCloseable {
 		return true;
 	}
 	
-	public int insertTreningsOkt(){
-		String type = "";
+	public int insertTreningsOkt(Treningsokt t){
 		
 		try (Statement st = conn.createStatement()){
 			String query = "";
 			MessageFormat treningTemplate = new MessageFormat(
-				"insert into `treningsøkt` values({0},{1},{2},{3},{4}); SET i_id = LAST_INSERT_ID();"
+				"insert into `treningsøkt` values(\"{0}\",{1},{2},\"{3}\",\"{4}\"); SET i_id = LAST_INSERT_ID();\n"
 			);
 			MessageFormat ovingTemplate = new MessageFormat(
 				"insert into `treningsøkt_har_øving` values(t_id,{0});"
 			);
-			
-			query += treningTemplate.format(new Object[]{null,null,null,null,null});
+			Date d = new Date(t.dato.toGMTString());
+			d.setTime(t.tidspunkt.getTime());
+			query += treningTemplate.format(new Object[]{d.toGMTString(),t.varighet,t.prestasjon,t.notat,t.form});
 			/*For each øvelse in treningsOkt*/
-			query += ovingTemplate.format(new Object[]{0});
-			
-			if(st.execute(query)){
-				return 0;
+			for(Ovelse o : t.ovelser){
+				query += ovingTemplate.format(new Object[]{o.ovelse_id});
 			}
+			System.out.println(query);
+			/*if(st.execute(query)){
+				return 0;
+			}*/
 		}catch(SQLException ex){
 			ex.printStackTrace();
 		}
