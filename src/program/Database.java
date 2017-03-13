@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -15,10 +16,16 @@ public class Database implements AutoCloseable {
 	private Connection conn = null;
 	private static String KEY_URL = DatabaseKey.KEY_URL;
 	
-	
+	public static void main(String args[]){
+		
+		Database d = new Database();
+		d.connect();
+		for(Kategori i : d.getKategorier()){
+			System.out.println(i.getFullName());
+		}
+	}
 	
 	public boolean connect() {
-		// Class.forName("com.mysql.jdbc.Driver");  Not needed if Eclipse?
 		try {
 			conn = DriverManager.getConnection(KEY_URL);
 		}
@@ -54,6 +61,40 @@ public class Database implements AutoCloseable {
 		return 0;
 	}
 	
+	public List<Kategori> getKategorier(){
+		//Might want to return 
+		List<Kategori> ret = new ArrayList<Kategori>();
+		//Id, kat map
+		Map<Integer,Kategori> idmap = new HashMap<Integer,Kategori>();
+		try (Statement st = conn.createStatement()){
+			String query = "select * from `kategori`";
+			if(st.execute(query)){
+				ResultSet res = st.getResultSet();
+				while(res.next()){
+					Kategori kat = new Kategori(
+							res.getInt(1),
+							res.getString(2),
+							//Create a fake parent
+							new Kategori(res.getInt(3),"",null));
+					idmap.put(res.getInt(1), kat);
+					ret.add(kat);
+				}
+				for(Kategori kat : ret){
+					int pid = kat.getParent().getId();
+					if(idmap.containsKey(pid)){
+						kat.setParent(idmap.get(pid));
+					}else{
+						kat.setParent(null);
+					}
+				}
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		
+		
+		return ret;
+	}
 	
 	@Override
 	public void close() {
