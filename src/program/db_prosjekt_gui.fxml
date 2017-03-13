@@ -84,7 +84,7 @@
                   <Text layoutX="14.0" layoutY="128.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sett" />
                </children>
             </Pane>
-            <Pane fx:id="styrke_input" layoutY="322.0" prefHeight="191.0" prefWidth="228.0">
+            <Pane fx:id="styrke_input" layoutY="322.0" prefHeight="191.0" prefWidth="228.0" visible="false">
                <children>
                   <TextField fx:id="styrke_belastning" layoutX="14.0" layoutY="31.0" prefHeight="25.0" prefWidth="58.0" promptText="kg" />
                   <Text layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Belastning" />
