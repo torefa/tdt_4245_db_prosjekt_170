@@ -4,4 +4,7 @@
 .classpath
 .settings/
 \.metadata/
-src/program/DatabaseKey.java
+
+
+/src/program/DatabaseKey.java
+mysql-connector-java-5.1.40-bin.jar
