@@ -27,4 +27,7 @@ public class Kategori {
 		ret += this.name;
 		return ret;
 	}
+	public String toString(){
+		return this.getFullName();
+	}
 }
