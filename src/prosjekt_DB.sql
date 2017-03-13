@@ -58,7 +58,7 @@ CREATE TABLE `styrke_kond_øvelse` (
   PRIMARY KEY (`id_øvelse`),
   CONSTRAINT `styrke_øvelse_fk`
     FOREIGN KEY (`id_øvelse`)
-    REFERENCES `øving` (`id`))
+    REFERENCES `øving` (`id`));
 
 /*
 Utholdenhetsøvelse er en subklasse av øving
@@ -141,7 +141,7 @@ Datapunk er en svak identitet som er
 koblet opp mot en treningsøkt og implisitt
 koblet opp mot en eller flere øvinger
 */
-CREATE TABLE `datapunk` (
+CREATE TABLE `datapunkt` (
   `id` INT UNSIGNED NOT NULL,
   `tid` TIME NULL,
   `puls` INT NULL,
