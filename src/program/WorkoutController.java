@@ -147,13 +147,20 @@ public class WorkoutController implements AppBinder{
 		
 		type_aktivitet.setItems(FXCollections.observableArrayList(
 				"Innendørs", "Utendørs"));
+
+		utendor_pane.setVisible(false);
+		innendor_pane.setVisible(false);
+		
+		type_aktivitet.valueProperty().addListener(
+				(observable, oldValue, newValue) -> showTrenTypeField());
 		
 		
 		// ovelser added to our workout pane
 		
 		uthold_input.setVisible(false);
 		kondisjon_input.setVisible(false);
-		styrke_input.setVisible(false);;
+		styrke_input.setVisible(false);
+		
 		
 		
 		// Create Ovelse pane
@@ -354,6 +361,24 @@ public class WorkoutController implements AppBinder{
 				uthold_input.setVisible(true);
 				break;
 				
+		}
+	}
+	
+	
+	private void showTrenTypeField(){
+		// "Innendørs", "Utendørs"
+		switch(type_aktivitet.getValue()){
+			case "Innendørs":
+				utendor_pane.setVisible(false);
+				innendor_pane.setVisible(true);
+				break;
+			case "Utendørs":
+				utendor_pane.setVisible(true);
+				innendor_pane.setVisible(false);
+				break;
+			default: 
+				// invalid value
+				return;
 		}
 	}
 	
