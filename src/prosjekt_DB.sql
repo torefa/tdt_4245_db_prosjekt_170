@@ -39,10 +39,10 @@ CREATE TABLE `treningsøkt_har_øving` (
   INDEX `id_øving_fk_idx` (`id_øving` ASC),
   CONSTRAINT `id_treningsøkt_fk`
     FOREIGN KEY (`id_trening`)
-    REFERENCES `db_prosjekt`.`treningsøkt` (`id`),
+    REFERENCES `jarletr_db_prosjekt_170`.`treningsøkt` (`id`),
   CONSTRAINT `id_øving_fk`
     FOREIGN KEY (`id_øving`)
-    REFERENCES `db_prosjekt`.`øving` (`id`));
+    REFERENCES `jarletr_db_prosjekt_170`.`øving` (`id`));
 
 /*
 Styrke øving er en subklasse av øving
@@ -99,7 +99,7 @@ CREATE TABLE `øvelse_har_kategori` (
   INDEX `ok_kategori_fk_idx` (`id_kategori` ASC),
   CONSTRAINT `ok_kategori_fk`
     FOREIGN KEY (`id_kategori`)
-    REFERENCES `db_prosjekt`.`kategori` (`id`),
+    REFERENCES `jarletr_db_prosjekt_170`.`kategori` (`id`),
   CONSTRAINT `ok_ovelse_fk`
     FOREIGN KEY (`id_øvelse`)
     REFERENCES `øving` (`id`));
