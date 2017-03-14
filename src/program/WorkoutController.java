@@ -27,7 +27,7 @@ public class WorkoutController implements AppBinder{
 	// attributes to make life easier
 	ObservableList<Ovelse> ovInCollection = FXCollections.observableArrayList();
 	
-	// treningsokt pane
+	// Treningsokt pane
 	@FXML TextField treningsokt_navn;
 	@FXML DatePicker dato;
 	@FXML ChoiceBox<Integer> hour;
@@ -39,50 +39,46 @@ public class WorkoutController implements AppBinder{
 	@FXML ChoiceBox<String> type_aktivitet;
 	@FXML Button registrer_okt;
 	
-	//innendor
+	// Utendor
 	@FXML Pane utendor_pane;
 	@FXML TextField utendor_temp;
 	@FXML TextField utendor_vaer;
 	
-	//utendor
+	// Innendor
 	@FXML Pane innendor_pane;
 	@FXML TextField innendor_publikum;
 	@FXML ChoiceBox<Integer> innendor_luft;
 	
-	
 	// "Øvelser lagt til i treningsøkten" pane
 	@FXML ListView<Ovelse> ovelserIn;
 	@FXML Button slettOvelseIn;
-	
 	
 	// Øvelse creation pane
 	@FXML TextField ovelse_navn;
 	@FXML TextArea ovelse_beskrivelse;
 	@FXML ChoiceBox<String> kategori;
 	@FXML ChoiceBox<String> type_ovelse;
+	
 	// Panes for field visibility
 	@FXML Pane uthold_input;
 	@FXML Pane kondisjon_input;
 	@FXML Pane styrke_input;
 	
-	// styrke fields
+	// Styrke fields
 	@FXML TextField styrke_belastning;
 	@FXML TextField styrke_rep;
 	@FXML TextField styrke_sett;
 	
-	// kondisjon fields
+	// Kondisjon fields
 	@FXML TextField kond_belastning;
 	@FXML TextField kond_rep;
 	@FXML TextField kond_sett;
 	
-	// uthold fields
+	// Uthold fields
 	@FXML TextField uthold_distanse;
 	@FXML TextField uthold_tid;
 	
 	@FXML Button registrer_ovelse;
-	
-	
-	
 	
 	// "Tidliger øvelser" pane
 	@FXML ListView<Ovelse> ovelserOut;
@@ -94,7 +90,7 @@ public class WorkoutController implements AppBinder{
 	private void initialize(){
 		// treningsokt pane init
 		
-		// set numbers for hours and minutes in the selectors
+		// set numbers for hours and minutes in the time selectors
 		ObservableList<Integer> hours = FXCollections.observableArrayList();
 		for(int i = 0; i < 24; i++){
 			hours.add(i);
@@ -117,6 +113,9 @@ public class WorkoutController implements AppBinder{
 				}
 			}
 		});
+		
+		// restrict the "innendor_publikum" field only to take numbers
+		// restriction on text field
 		innendor_publikum.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -125,6 +124,9 @@ public class WorkoutController implements AppBinder{
 				}
 			}
 		});
+		
+		// restrict the "utendor_temp" field only to take numbers
+		// restriction on text field
 		utendor_temp.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -147,7 +149,8 @@ public class WorkoutController implements AppBinder{
 		
 		type_aktivitet.setItems(FXCollections.observableArrayList(
 				"Innendørs", "Utendørs"));
-
+		
+		// Visibility dependent on 'type_aktivitet'
 		utendor_pane.setVisible(false);
 		innendor_pane.setVisible(false);
 		
@@ -155,29 +158,26 @@ public class WorkoutController implements AppBinder{
 				(observable, oldValue, newValue) -> showTrenTypeField());
 		
 		
-		// ovelser added to our workout pane
-		
+		// Ovelser added to our workout pane
+		// Visibility dependent on 'type_ovelse'
 		uthold_input.setVisible(false);
 		kondisjon_input.setVisible(false);
 		styrke_input.setVisible(false);
 		
 		
-		
 		// Create Ovelse pane
-		
-		
 		type_ovelse.valueProperty().addListener(
 				(observable, oldValue, newValue) -> showInputField());
 		
 		
 		// TODO: set kategori ChoiceBox
 		
-		// sets the type of ovelse in the choicebox
+		// Sets the type of ovelse in the choicebox
 		ObservableList<String> ovelseType = FXCollections.observableArrayList(
 				"Styrke", "Kondisjon", "Utholdenhet");
 		type_ovelse.setItems(ovelseType);
 		
-		// restricts on styrke
+		// Restrictions on styrke
 		styrke_belastning.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -203,7 +203,7 @@ public class WorkoutController implements AppBinder{
 			}
 		});
 		
-		// restrics on uthold
+		// Restrictions on uthold
 		uthold_distanse.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -221,7 +221,7 @@ public class WorkoutController implements AppBinder{
 			}
 		});
 		
-		// restricts on kond
+		// Restrictions on kondisjon
 		kond_belastning.textProperty().addListener(new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -248,7 +248,7 @@ public class WorkoutController implements AppBinder{
 		});
 		
 		
-		// button listeners
+		// Button listeners
 		
 		// add new ovelse to database and list
 		registrer_ovelse.setOnAction(e -> addOvelseOut());
