@@ -7,11 +7,11 @@ public class Treningsokt{
 	Date dato;
 	Time tidspunkt;
 	long varighet;
-	String form;
+	int form;
 	int prestasjon;
 	String notat;
 	
-	public Treningsokt(long trening_id,Date dato, Time tidspunkt, long varighet, String form,int prestasjon,String notat) throws IndexOutOfBoundsException{
+	public Treningsokt(int trening_id,Date dato, Time tidspunkt, long varighet, int form,int prestasjon,String notat) throws IndexOutOfBoundsException{
 		this.trening_id=trening_id;
 		this.dato=dato;
 		this.tidspunkt=tidspunkt;
