@@ -26,9 +26,7 @@ public class Database implements AutoCloseable {
 			System.out.println(i.getFullName());
 		}
 		//public Treningsokt(long trening_id,Date dato, Time tidspunkt, long varighet, String form,int prestasjon,String notat) throws IndexOutOfBoundsException{
-		Treningsokt test = 	new Treningsokt(-1L, new Date(0), new Time(10,30,5), 9, "Good", 5, "Shits good");
-		test.addOvelse(new Ovelse(1, "...", "..."));
-		d.insertTreningsOkt(test);
+		
 	}
 	
 	public boolean connect() {
