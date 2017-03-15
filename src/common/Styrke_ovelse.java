@@ -1,4 +1,4 @@
-package program;
+package common;
 
 /**
  * Represents thev corresponding table in the database.

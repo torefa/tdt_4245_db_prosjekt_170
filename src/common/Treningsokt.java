@@ -1,8 +1,8 @@
-package program;
+package common;
 
 import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import javafx.util.converter.PercentageStringConverter;
 
@@ -13,14 +13,14 @@ import javafx.util.converter.PercentageStringConverter;
  * @author Group 170
  */
 public abstract class Treningsokt{
-	long trening_id;
-	Date dato;
-	Time tidspunkt;
-	long varighet;
-	int form;
-	int prestasjon;
-	String notat;
-	List<Ovelse> ovelser;
+	public long trening_id;
+	public Date dato;
+	public Time tidspunkt;
+	public long varighet;
+	public int form;
+	public int prestasjon;
+	public String notat;
+	public List<Ovelse> ovelser;
 	
 
 	/**

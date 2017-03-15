@@ -1,4 +1,4 @@
-package program;
+package common;
 
 public class Kategori {
 	private int id;

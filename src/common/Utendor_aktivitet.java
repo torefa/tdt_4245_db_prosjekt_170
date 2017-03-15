@@ -1,7 +1,7 @@
-package program;
+package common;
 
 import java.sql.Time;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * Represents the corresponding table in the database.

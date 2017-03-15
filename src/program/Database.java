@@ -1,23 +1,28 @@
 package program;
 import java.sql.Connection;
-import java.util.Date;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Time;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import common.*;
 
 
 public class Database implements AutoCloseable {
 	private Connection conn = null;
 	private static String KEY_URL = DatabaseKey.KEY_URL;
-	
+	/*
 	public static void main(String args[]){
 		
 		Database d = new Database();
@@ -25,10 +30,10 @@ public class Database implements AutoCloseable {
 		for(Kategori i : d.getKategorier()){
 			System.out.println(i.getFullName());
 		}
-		//public Treningsokt(long trening_id,Date dato, Time tidspunkt, long varighet, String form,int prestasjon,String notat) throws IndexOutOfBoundsException{
-		
-	}
-	
+		Utendor_aktivitet aktivitet = new Utendor_aktivitet(-1,new Date(2018,3,20),(Time) Time.valueOf("13:0:0"),10,10,10,"",20,"Sol");
+		Ovelse test = new Styrke_ovelse(-1,"Test","", 10, 10, 10);
+		d.insertTreningsOkt(aktivitet);
+	}*/
 	public boolean connect() {
 		try {
 			conn = DriverManager.getConnection(KEY_URL);
@@ -42,33 +47,95 @@ public class Database implements AutoCloseable {
 	
 	public int insertTreningsOkt(Treningsokt t){
 		
-		try (Statement st = conn.createStatement()){
+		try{
+			Statement st1 = conn.createStatement();
+			Statement st2 = conn.createStatement();
+			
 			String query = "";
 			MessageFormat treningTemplate = new MessageFormat(
-				"insert into `treningsøkt` values(\"{0}\",{1},{2},\"{3}\",\"{4}\"); SET i_id = LAST_INSERT_ID();\n"
+				"insert into `treningsøkt`(`dato`,`varighet`,`prestasjon`,`notat`,`form`) values(\"{0}\",{1},{2},\"{3}\",\"{4}\");"
 			);
 			MessageFormat ovingTemplate = new MessageFormat(
-				"insert into `treningsøkt_har_øving` values(t_id,{0});"
+				"insert into `treningsøkt_har_øving` values(@i_id,{0});"
 			);
-			Date d = new Date(t.dato.toGMTString());
-			d.setTime(t.tidspunkt.getTime());
-			query += treningTemplate.format(new Object[]{d.toGMTString(),t.varighet,t.prestasjon,t.notat,t.form});
+			String datestring = new SimpleDateFormat("dd/mm/yyyy",Locale.ENGLISH).format(t.dato);
+			query = treningTemplate.format(new Object[]{datestring,t.varighet,t.prestasjon,t.notat,t.form});
 			/*For each øvelse in treningsOkt*/
-			for(Ovelse o : t.ovelser){
-				query += ovingTemplate.format(new Object[]{o.ovelse_id});
-			}
-			System.out.println(query);
-			/*if(st.execute(query)){
+			if(st1.execute(query)){
+				query = "SET i_id = LAST_INSERT_ID();";
+				if(st2.execute(query)){
+					query = "";
+					for(Ovelse o : t.ovelser){
+						query = ovingTemplate.format(new Object[]{o.ovelse_id});
+						Statement st3 = conn.createStatement();
+						if(!st3.execute(query)){break;}
+					}
+						
+				}
 				return 0;
-			}*/
+			}
 		}catch(SQLException ex){
 			ex.printStackTrace();
 		}
-		return 0;
+		return 1;
 	}
-	
+	public Kategori parseKat(){
+		return null;
+	}
+	//Return a list of ovelser
+	public List<Ovelse> getOvelser(){
+		List<Ovelse> ret = new ArrayList<Ovelse>();
+		try(Statement st = conn.createStatement()){
+			
+			String query1 = "select * from `øving`";
+			MessageFormat query2 = new MessageFormat("select * from `øvelse_har_kategori` where `id_øvelse` = {0}");
+			MessageFormat query3 = new MessageFormat("select * from `syrke_kond_øvelse` where `id_øvelse` = {0}");
+			MessageFormat query4 = new MessageFormat("select * from `utholdenhet_øvelse` where `id_øvelse` = {0}");
+			if(st.execute(query1)){
+				ResultSet set = st.getResultSet();
+				while(set.next()){
+					int o_id = set.getInt(1);
+					String navn = set.getString(2);
+					String beskrivelse = set.getString(3);
+					Ovelse o = null;
+					Statement st2 = conn.createStatement();
+					Statement st3 = conn.createStatement();
+					Statement st4 = conn.createStatement();
+					if(st3.execute(query3.format(o_id))){
+						ResultSet st_set = st3.getResultSet();
+						if(! st_set.next()){
+							int belastning = st_set.getInt(2);
+							int repetisjoner= st_set.getInt(3);
+							int sett = st_set.getInt(4);
+							
+							o = new Styrke_ovelse(o_id, navn, beskrivelse, belastning, repetisjoner, sett);
+						}else if(st4.execute(query4.format(o_id))){
+							st_set = st4.getResultSet();
+							int distanse = st_set.getInt(2);
+							int tid= st_set.getInt(3);
+							
+							o = new Utholdenhet_ovelse(o_id, navn, beskrivelse, distanse, tid);
+						
+						}
+					}
+					if(st2.execute(query2.format(o_id))){
+						ResultSet katSet = st2.getResultSet();
+						while(katSet.next()){
+							int kat_id = katSet.getInt(2);
+							o.kategori = kat_id;
+							break;
+						}
+					}
+					ret.add(o);
+				}
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		
+		return ret;
+	}
 	public List<Kategori> getKategorier(){
-		//Might want to return 
 		List<Kategori> ret = new ArrayList<Kategori>();
 		//Id, kat map
 		Map<Integer,Kategori> idmap = new HashMap<Integer,Kategori>();

@@ -5,8 +5,16 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
+import java.sql.Date;
+import java.util.List;
 
+import common.Ovelse;
+import common.Styrke_ovelse;
+import common.Utendor_aktivitet;
+import common.Utholdenhet_ovelse;
+import common.Kondisjon_ovelse;
+import common.Innendor_aktivitet;
+import common.Kategori;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -23,7 +31,7 @@ import javafx.scene.layout.Pane;
 public class WorkoutController implements AppBinder{
 
 	MainApp main;
-	
+	Database db;
 	// attributes to make life easier
 	ObservableList<Ovelse> ovInCollection = FXCollections.observableArrayList();
 	
@@ -56,7 +64,7 @@ public class WorkoutController implements AppBinder{
 	// Øvelse creation pane
 	@FXML TextField ovelse_navn;
 	@FXML TextArea ovelse_beskrivelse;
-	@FXML ChoiceBox<String> kategori;
+	@FXML ChoiceBox<Kategori> kategori;
 	@FXML ChoiceBox<String> type_ovelse;
 	
 	// Panes for field visibility
@@ -89,6 +97,17 @@ public class WorkoutController implements AppBinder{
 	@FXML
 	private void initialize(){
 		// treningsokt pane init
+		db = new Database();
+		if(!db.connect()){
+			System.out.println("Failed to connect to database");
+			System.exit(1);
+		}
+		System.out.println("Connected to database");
+		
+		
+		updateKategori(db.getKategorier());
+		updatePrevOvelse(db.getOvelser());
+		
 		
 		// set numbers for hours and minutes in the time selectors
 		ObservableList<Integer> hours = FXCollections.observableArrayList();
@@ -262,7 +281,7 @@ public class WorkoutController implements AppBinder{
 		registrer_okt.setOnAction(e -> createWorkout());
 	}
 	
-	public void updateKategori(String[] kategorier){
+	public void updateKategori(List<Kategori> kategorier){
 		kategori.setItems(FXCollections.observableArrayList(kategorier));
 		
 	}
@@ -288,7 +307,7 @@ public class WorkoutController implements AppBinder{
 		// constructor Date(int, int, int) is deprecated.
 		Calendar cal = Calendar.getInstance();
 		cal.set(dateLocal.getYear(), dateLocal.getMonthValue(), dateLocal.getDayOfMonth(), h, m, 0);
-		Date dateD = cal.getTime();
+		Date dateD = (Date)cal.getTime();
 		
 		// gets milliseconds and makes new Time object
 		Time time = new Time(cal.getTime().getTime());
