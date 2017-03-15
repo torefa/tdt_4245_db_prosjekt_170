@@ -338,12 +338,13 @@ public class WorkoutController implements AppBinder{
 		// constructor Date(int, int, int) is deprecated.
 		Calendar cal = Calendar.getInstance();
 		cal.set(dateLocal.getYear(), dateLocal.getMonthValue(), dateLocal.getDayOfMonth(), h, m, 0);
-		Date dateD = (Date)cal.getTime();
+		Date dateD = Date.valueOf(dateLocal);
 		
 		// gets milliseconds and makes new Time object
 		Time time = new Time(cal.getTime().getTime());
 		
 		Collection<Ovelse> ovelser = ovelserIn.getItems();
+		//System.out.println(ovelser.size());
 		
 		switch(activ){
 		//"Innendørs", "Utendørs")

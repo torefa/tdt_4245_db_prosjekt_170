@@ -46,6 +46,28 @@ public class Database implements AutoCloseable {
 	}
 
 	
+	public void insertOving(Ovelse o){
+		
+		try{
+			Statement st1 = conn.createStatement();
+			Statement st2 = conn.createStatement();
+			
+			String query = "";
+			
+			MessageFormat ovingTemplate = new MessageFormat(
+				"insert into `øving`(`navn`,`beskrivelse`) values(\"{0}\",\"{1}\");"	
+			);
+			
+			MessageFormat ovingSubTemplate = (o instanceof Utholdenhet_ovelse) ? 
+					new MessageFormat(
+							"insert into `utholdenhet_øvelse`(`id_øvelse`,`distanse_km`,`tid_min`) values({0},{1},{2});"
+					):
+					new MessageFormat(
+							""
+					);
+		}
+	}
+	
 	public int insertTreningsOkt(Treningsokt t){
 		
 		try{
@@ -57,22 +79,29 @@ public class Database implements AutoCloseable {
 				"insert into `treningsøkt`(`dato`,`varighet`,`prestasjon`,`notat`,`form`) values(\"{0}\",{1},{2},\"{3}\",\"{4}\");"
 			);
 			MessageFormat ovingTemplate = new MessageFormat(
-				"insert into `treningsøkt_har_øving` values(@i_id,{0});"
+				"insert into `treningsøkt_har_øving`(`id_trening`,`id_øving`) values(LAST_INSERT_ID(),{0});"
 			);
-			String datestring = new SimpleDateFormat("dd/mm/yyyy",Locale.ENGLISH).format(t.dato);
-			query = treningTemplate.format(new Object[]{datestring,t.varighet,t.prestasjon,t.notat,t.form});
+			//String datestring = new SimpleDateFormat("dd/mm/yyyy",Locale.ENGLISH).format(t.dato);
+			query = treningTemplate.format(new Object[]{t.dato,t.varighet,t.prestasjon,t.notat,t.form});
 			/*For each øvelse in treningsOkt*/
-			if(st1.execute(query)){
-				query = "SET i_id = LAST_INSERT_ID();";
-				if(st2.execute(query)){
-					query = "";
-					for(Ovelse o : t.ovelser){
-						query = ovingTemplate.format(new Object[]{o.ovelse_id});
-						Statement st3 = conn.createStatement();
-						if(!st3.execute(query)){break;}
-					}
-						
+			System.out.println("making økt");
+			if(!st1.execute(query)){
+				System.out.println("økt made");
+				for(Ovelse o : t.ovelser){
+					System.out.println("hmm");
+					// TODO: workaround when a treningsøkt has same ovelser multiple times -> duplicate primary key
+					query = ovingTemplate.format(new Object[]{o.ovelse_id});
+					Statement st3 = conn.createStatement();
+					st3.execute(query);
+					//if(!st3.execute(query)){break;}
 				}
+				/*query = "SET i_id = LAST_INSERT_ID();";
+				if(st2.execute(query)){
+					System.out.println("set id");
+					query = "";
+					
+						
+				}*/
 				return 0;
 			}
 		}catch(SQLException ex){
