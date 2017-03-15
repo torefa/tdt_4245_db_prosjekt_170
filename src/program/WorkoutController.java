@@ -85,18 +85,23 @@ public class WorkoutController implements AppBinder{
 	@FXML Button slettOvelseOut;
 	@FXML Button leggTilIn;
 	
-	
+	/**
+	* Initializes and set values to the db_prosjekt_gui.
+	*
+	* @author Group 170
+	*/
 	@FXML
 	private void initialize(){
 		// treningsokt pane init
 		
-		// set numbers for hours and minutes in the time selectors
+		// set numbers for hours in the time selectors
 		ObservableList<Integer> hours = FXCollections.observableArrayList();
 		for(int i = 0; i < 24; i++){
 			hours.add(i);
 		}
 		hour.setItems((FXCollections.observableArrayList(hours)));
 		
+		// set numbers for minutes in the time selectors
 		ObservableList<Integer> minutes = FXCollections.observableArrayList();
 		for(int m = 0; m < 60; m++){
 			minutes.add(m);
@@ -262,15 +267,41 @@ public class WorkoutController implements AppBinder{
 		registrer_okt.setOnAction(e -> createWorkout());
 	}
 	
+	/**
+	* Adds kategories from the kategori list in the gui to the database.
+	*
+	* @author Group 170
+	*/
 	public void updateKategori(String[] kategorier){
 		kategori.setItems(FXCollections.observableArrayList(kategorier));
 		
 	}
 	
+	/**
+	* Adds ovelser from the ovelser list in the gui to the database.
+	*
+	* @author Group 170
+	*/
 	public void updatePrevOvelse(Collection<Ovelse> ovelser){
 		ovelserOut.setItems(FXCollections.observableArrayList(ovelser));
 	}
 	
+	/**
+	* Creates a workout with input from gui.
+	*
+	* @author Group 170
+	* @param navn Name of the workout.
+	* @param dateLocal Date of the workout.
+	* @param h Dour of the workout.
+	* @param m Minute of the workout.
+	* @param duration Duration of the workout.
+	* @param f Form during the workout.
+	* @param pres Perstasjon during the workout.
+	* @param note Notes made for the workout.
+	* @param activ Type activity of the workout.
+	* 
+	* 
+	*/
 	private void createWorkout(){
 		// TODO check if fields are empty and return if some are
 		String navn = treningsokt_navn.getText();
@@ -327,22 +358,43 @@ public class WorkoutController implements AppBinder{
 		
 	}
 	
+	/**
+	* Adds ovelse object to ovInCollection and updates ovelserIn with ovInCollection.
+	*
+	* @author Group 170
+	*/
 	private void addOvelseIn(Ovelse ov){
 		if(ov == null){return;}
 		ovInCollection.add(ov);
 		ovelserIn.setItems(ovInCollection);
 	}
 	
+	/**
+	* Adds ovelse object to the database object to remove it.
+	*
+	* @author Group 170
+	*/
 	private void removeOvelseOut(Ovelse ov){
 		if(ov == null){return;}
 		// TODO: send ovelse object to database object to remove it, and make it call updatePrevOvelse()
 	}
+	
+	/**
+	* Removes ovelse object from  ovInCollection and updates ovelserIn with ovInCollection.
+	*
+	* @author Group 170
+	*/
 	private void removeOvelseIn(Ovelse ov){
 		if(ov == null){return;}
 		ovInCollection.remove(ov);
 		ovelserIn.setItems(ovInCollection);
 	}
 	
+	/**
+	* Changes visibility of input fields dependent on input in type_ovelse.
+	*
+	* @author Group 170
+	*/
 	private void showInputField(){
 		switch(type_ovelse.getValue()){
 			case "Styrke":
@@ -364,7 +416,11 @@ public class WorkoutController implements AppBinder{
 		}
 	}
 	
-	
+	/**
+	* Changes visibility of input fields dependent on input in type_aktivitet.
+	*
+	* @author Group 170
+	*/
 	private void showTrenTypeField(){
 		// "Innendørs", "Utendørs"
 		switch(type_aktivitet.getValue()){
@@ -382,6 +438,21 @@ public class WorkoutController implements AppBinder{
 		}
 	}
 	
+	/**
+	* Creates ovelse based on type_ovelse and sends to the database.
+	*
+	* @author Group 170
+	* @param navn Name of the ovelse.
+	* @param beskrivelse Description of ovelse.
+	* @param styrBelastning Weight used in a 'styrke' ovelse.
+	* @param styrRepetisjoner Repetitions used in a 'styrke' ovelse.
+	* @param styrSett Sett used in a 'styrke' ovelse.
+	* @param konBelastning Weight used in a 'kondisjon' ovelse.
+	* @param konRepetisjoner Repetitions used in a 'kondisjon' ovelse.
+	* @param konSett Sett used in a 'kondisjon' ovelse.
+	* @param utDistanse_km Distance covered in an 'uthold' ovelse.
+	* @param konBelastning utTid_min used in an 'uthold' ovelse.
+	*/
 	private void addOvelseOut(){
 		// TODO: check if fields are empty, return if they are
 		//System.out.println(type_ovelse.getValue());
