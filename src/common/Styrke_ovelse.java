@@ -6,9 +6,9 @@ package common;
  * @author Group 170
  */
 public class Styrke_ovelse extends Ovelse{
-	long belastning;
-	long repetisjoner;
-	long sett;
+	public long belastning;
+	public long repetisjoner;
+	public long sett;
 	
 	/**
 	* Creates a new strength exercise.

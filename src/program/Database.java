@@ -57,14 +57,36 @@ public class Database implements AutoCloseable {
 			MessageFormat ovingTemplate = new MessageFormat(
 				"insert into `øving`(`navn`,`beskrivelse`) values(\"{0}\",\"{1}\");"	
 			);
-			
-			MessageFormat ovingSubTemplate = (o instanceof Utholdenhet_ovelse) ? 
-					new MessageFormat(
-							"insert into `utholdenhet_øvelse`(`id_øvelse`,`distanse_km`,`tid_min`) values({0},{1},{2});"
-					):
-					new MessageFormat(
-							""
+			query = ovingTemplate.format(new Object[]{o.navn,o.beskrivelse});
+			if(!st1.execute(query)){
+				MessageFormat ovingSubTemplate = null;
+				
+				// huehue so good at else if fite me irl.
+				if( o instanceof Utholdenhet_ovelse){
+					ovingSubTemplate = new MessageFormat(
+							"insert into `utholdenhet_øvelse`(`id_øvelse`,`distanse_km`,`tid_min`) values(LAST_INSERT_ID(),{0},{1});"
 					);
+					Utholdenhet_ovelse ov = (Utholdenhet_ovelse) o;
+					query = ovingSubTemplate.format(new Object[]{ov.distanse_km,ov.tid_min});
+				}else if(o instanceof Styrke_ovelse){
+					ovingSubTemplate = new MessageFormat(
+							"insert into `styrke_kond_øvelse`(`id_øvelse`,`belastning`,`type`,`repitisjoner`,`sett`) values(LAST_INSERT_ID(),{0},\"{1}\",{2},{3});"
+					);
+					Styrke_ovelse ov = (Styrke_ovelse)o;
+					query = ovingSubTemplate.format(new Object[]{ov.belastning, "Styrke", ov.repetisjoner, ov.sett});
+					
+				}else{
+					ovingSubTemplate = new MessageFormat(
+							"insert into `styrke_kond_øvelse`(`id_øvelse`,`belastning`,`type`,`repitisjoner`,`sett`) values(LAST_INSERT_ID(),{0},\"{1}\",{2},{3});"
+					);
+					Kondisjon_ovelse ov = (Kondisjon_ovelse)o;
+					query = ovingSubTemplate.format(new Object[]{ov.belastning, "Kondisjon", ov.repetisjoner, ov.sett});
+				}
+				
+				st2.executeUpdate(query);
+			}
+		}catch(SQLException ex){
+			ex.printStackTrace();
 		}
 	}
 	
@@ -95,6 +117,8 @@ public class Database implements AutoCloseable {
 					st3.execute(query);
 					//if(!st3.execute(query)){break;}
 				}
+				
+				// TODO: utendør/innendør
 				/*query = "SET i_id = LAST_INSERT_ID();";
 				if(st2.execute(query)){
 					System.out.println("set id");

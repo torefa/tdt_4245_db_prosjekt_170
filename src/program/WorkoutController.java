@@ -500,10 +500,9 @@ public class WorkoutController implements AppBinder{
 				//long ovelse_id, String navn, String beskrivelse,long belastning,long repetisjoner,long sett
 				Styrke_ovelse styrk = new Styrke_ovelse(-1, navn, beskrivelse, styrBelastning, styrRepetisjoner, styrSett);
 				
-				
-				// TODO: update database with new styrke ovelse and update list
-				//addOvelseIn(styrk);
-				
+				db.insertOving(styrk);
+
+				updatePrevOvelse(db.getOvelser());
 				break;
 			case "Kondisjon":
 				// create kondisjon class and pass on
@@ -515,8 +514,10 @@ public class WorkoutController implements AppBinder{
 				
 				//long ovelse_id, String navn, String beskrivelse,long belastning,long repetisjoner,long sett
 				Kondisjon_ovelse kond = new Kondisjon_ovelse(-1, navn, beskrivelse, konBelastning, konRepetisjoner, konSett);
-				// TODO: update database with new kondisjon ovelse and update list
 				
+				db.insertOving(kond);
+
+				updatePrevOvelse(db.getOvelser());
 				break;
 			case "Utholdenhet":
 				// create utholdenhet class and pass on
@@ -526,6 +527,9 @@ public class WorkoutController implements AppBinder{
 				//long ovelse_id, String navn, String beskrivelse,long distanse_km,long tig_min
 				Utholdenhet_ovelse uthold = new Utholdenhet_ovelse(-1, navn, beskrivelse, utDistanse_km, utTid_min);
 				
+				db.insertOving(uthold);
+
+				updatePrevOvelse(db.getOvelser());
 				// TODO: update database with new utholdenhet ovelse and update list
 				break;
 			default:

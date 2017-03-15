@@ -7,8 +7,8 @@ package common;
  */
 
 public class Utholdenhet_ovelse extends Ovelse{
-	long distanse_km;
-	long tid_min;
+	public long distanse_km;
+	public long tid_min;
 	
 	/**
 	* Creates a new kondition exercise.
