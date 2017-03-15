@@ -353,21 +353,29 @@ public class WorkoutController implements AppBinder{
 				int luft = innendor_luft.getValue();
 				
 				// create innendor object
-				// int trening_id,Date dato, Time tidspunkt, long varighet, int form,int prestasjon,String notat,long publikum,int luft
 				Innendor_aktivitet innen = new Innendor_aktivitet(-1, dateD, time, duration, f, pres, note, pub, luft);
 				
+				// adds ovelser to treningsokt
+				for(Ovelse o : ovelser){
+					innen.addOvelse(o);
+				}
 				
-				// TODO: send trening object and collection of ovelser to database
+				db.insertTreningsOkt(innen);
 				break;
 			case "Utendørs":
 				// create utendørs
-				
 				long temp = Long.parseLong(utendor_temp.getText());
 				String vaer = utendor_vaer.getText();
 				
-				// int trening_id,Date dato, Time tidspunkt, long varighet, int form,int prestasjon,String notat,long temperatur,String vaertype
+				// create utendor object
 				Utendor_aktivitet uten = new Utendor_aktivitet(-1, dateD, time, duration, f, pres, note, temp, vaer);
-				// TODO: send trening object and collection of ovelser to database
+				
+				// adds ovelser to treningsokt
+				for(Ovelse o : ovelser){
+					uten.addOvelse(o);
+				}
+				
+				db.insertTreningsOkt(uten);
 				break;
 			default: 
 				// invalid value
@@ -490,6 +498,7 @@ public class WorkoutController implements AppBinder{
 				
 				//long ovelse_id, String navn, String beskrivelse,long belastning,long repetisjoner,long sett
 				Styrke_ovelse styrk = new Styrke_ovelse(-1, navn, beskrivelse, styrBelastning, styrRepetisjoner, styrSett);
+				
 				
 				// TODO: update database with new styrke ovelse and update list
 				//addOvelseIn(styrk);

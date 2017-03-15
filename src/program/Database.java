@@ -44,6 +44,7 @@ public class Database implements AutoCloseable {
 		}
 		return true;
 	}
+
 	
 	public int insertTreningsOkt(Treningsokt t){
 		
@@ -89,7 +90,7 @@ public class Database implements AutoCloseable {
 			
 			String query1 = "select * from `øving`";
 			MessageFormat query2 = new MessageFormat("select * from `øvelse_har_kategori` where `id_øvelse` = {0}");
-			MessageFormat query3 = new MessageFormat("select * from `syrke_kond_øvelse` where `id_øvelse` = {0}");
+			MessageFormat query3 = new MessageFormat("select * from `styrke_kond_øvelse` where `id_øvelse` = {0}");
 			MessageFormat query4 = new MessageFormat("select * from `utholdenhet_øvelse` where `id_øvelse` = {0}");
 			if(st.execute(query1)){
 				ResultSet set = st.getResultSet();
@@ -101,24 +102,27 @@ public class Database implements AutoCloseable {
 					Statement st2 = conn.createStatement();
 					Statement st3 = conn.createStatement();
 					Statement st4 = conn.createStatement();
-					if(st3.execute(query3.format(o_id))){
+					if(st3.execute(query3.format(new Object[]{o_id}))){
 						ResultSet st_set = st3.getResultSet();
-						if(! st_set.next()){
+						if(st_set.next()){
 							int belastning = st_set.getInt(2);
-							int repetisjoner= st_set.getInt(3);
-							int sett = st_set.getInt(4);
+							int repetisjoner= st_set.getInt(4);
+							int sett = st_set.getInt(5);
 							
 							o = new Styrke_ovelse(o_id, navn, beskrivelse, belastning, repetisjoner, sett);
-						}else if(st4.execute(query4.format(o_id))){
+						}else if(st4.execute(query4.format(new Object[]{o_id}))){
 							st_set = st4.getResultSet();
-							int distanse = st_set.getInt(2);
-							int tid= st_set.getInt(3);
+							if(st_set.next()){
+								int distanse = st_set.getInt(2);
+								int tid= st_set.getInt(3);
+								
+								o = new Utholdenhet_ovelse(o_id, navn, beskrivelse, distanse, tid);
+							}
 							
-							o = new Utholdenhet_ovelse(o_id, navn, beskrivelse, distanse, tid);
 						
 						}
 					}
-					if(st2.execute(query2.format(o_id))){
+					if(st2.execute(query2.format(new Object[]{o_id}))){
 						ResultSet katSet = st2.getResultSet();
 						while(katSet.next()){
 							int kat_id = katSet.getInt(2);
@@ -126,6 +130,7 @@ public class Database implements AutoCloseable {
 							break;
 						}
 					}
+					
 					ret.add(o);
 				}
 			}
