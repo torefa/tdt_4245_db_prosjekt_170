@@ -51,6 +51,7 @@ public class Database implements AutoCloseable {
 		try{
 			Statement st1 = conn.createStatement();
 			Statement st2 = conn.createStatement();
+			Statement st3 = conn.createStatement();
 			
 			String query = "";
 			
@@ -84,6 +85,14 @@ public class Database implements AutoCloseable {
 				}
 				
 				st2.executeUpdate(query);
+				
+				// create øvelse_har_kategori object
+				MessageFormat ohkTemplate = new MessageFormat(
+						"insert into `øvelse_har_kategori`(`id_øvelse`,`id_kategori`) values(LAST_INSERT_ID(),{0});"
+				);
+				query = ohkTemplate.format(new Object[]{o.kategori});
+				st3.executeUpdate(query);
+			
 			}
 		}catch(SQLException ex){
 			ex.printStackTrace();

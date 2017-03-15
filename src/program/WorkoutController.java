@@ -487,18 +487,19 @@ public class WorkoutController implements AppBinder{
 		if(type_ovelse.getValue() == null){return;}
 		String navn = ovelse_navn.getText();
 		String beskrivelse = ovelse_beskrivelse.getText();
+		Kategori kat = kategori.getValue();
 		switch (type_ovelse.getValue()){
 			
 			case "Styrke":
 				// create styrke class and pass on
 
-				// TODO: kategori
 				long styrBelastning = Long.parseLong(styrke_belastning.getText());
 				long styrRepetisjoner = Long.parseLong(styrke_rep.getText());
 				long styrSett = Long.parseLong(styrke_sett.getText());
 				
 				//long ovelse_id, String navn, String beskrivelse,long belastning,long repetisjoner,long sett
 				Styrke_ovelse styrk = new Styrke_ovelse(-1, navn, beskrivelse, styrBelastning, styrRepetisjoner, styrSett);
+				styrk.kategori = kat.getId();
 				
 				db.insertOving(styrk);
 
@@ -507,13 +508,13 @@ public class WorkoutController implements AppBinder{
 			case "Kondisjon":
 				// create kondisjon class and pass on
 
-				// TODO: kategori
 				long konBelastning = Long.parseLong(kond_belastning.getText());
 				long konRepetisjoner = Long.parseLong(kond_rep.getText());
 				long konSett = Long.parseLong(kond_sett.getText());
 				
 				//long ovelse_id, String navn, String beskrivelse,long belastning,long repetisjoner,long sett
 				Kondisjon_ovelse kond = new Kondisjon_ovelse(-1, navn, beskrivelse, konBelastning, konRepetisjoner, konSett);
+				kond.kategori = kat.getId();
 				
 				db.insertOving(kond);
 
@@ -521,11 +522,12 @@ public class WorkoutController implements AppBinder{
 				break;
 			case "Utholdenhet":
 				// create utholdenhet class and pass on
-				// TODO: kategori
+
 				long utDistanse_km = Long.parseLong(uthold_distanse.getText());
 				long utTid_min = Long.parseLong(uthold_tid.getText());
 				//long ovelse_id, String navn, String beskrivelse,long distanse_km,long tig_min
 				Utholdenhet_ovelse uthold = new Utholdenhet_ovelse(-1, navn, beskrivelse, utDistanse_km, utTid_min);
+				uthold.kategori = kat.getId();
 				
 				db.insertOving(uthold);
 
