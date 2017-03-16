@@ -1,4 +1,4 @@
-package program;
+package common;
 
 /**
  * Represents the corresponding table in the database.
@@ -7,8 +7,8 @@ package program;
  */
 
 public class Utholdenhet_ovelse extends Ovelse{
-	long distanse_km;
-	long tid_min;
+	public long distanse_km;
+	public long tid_min;
 	
 	/**
 	* Creates a new kondition exercise.

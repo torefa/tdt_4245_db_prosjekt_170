@@ -6,5 +6,5 @@
 \.metadata/
 
 
-/src/program/DatabaseKey.java
+DatabaseKey.java
 mysql-connector-java-5.1.40-bin.jar

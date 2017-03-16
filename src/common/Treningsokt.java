@@ -1,7 +1,10 @@
-package program;
+package common;
 
 import java.sql.Time;
-import java.util.Date;
+import java.util.ArrayList;
+import java.sql.Date;
+import java.util.List;
+import javafx.util.converter.PercentageStringConverter;
 
 /**
  * Represents the corresponding table in the database.
@@ -10,14 +13,16 @@ import java.util.Date;
  * @author Group 170
  */
 public abstract class Treningsokt{
-	long trening_id;
-	Date dato;
-	Time tidspunkt;
-	long varighet;
-	int form;
-	int prestasjon;
-	String notat;
+	public long trening_id;
+	public Date dato;
+	public Time tidspunkt;
+	public long varighet;
+	public int form;
+	public int prestasjon;
+	public String notat;
+	public List<Ovelse> ovelser;
 	
+
 	/**
 	* Creates an activity.
 	*
@@ -30,7 +35,8 @@ public abstract class Treningsokt{
 	* @param prestasjon Rating of how well the workout was done.
 	* @param notat Option to add arbitrary notes to the workout.
 	*/
-	public Treningsokt(int trening_id,Date dato, Time tidspunkt, long varighet, int form,int prestasjon,String notat) throws IndexOutOfBoundsException{
+	public Treningsokt(long trening_id,Date dato, Time tidspunkt, long varighet, int form,int prestasjon,String notat,List<Ovelse> ovelser) throws IndexOutOfBoundsException{
+
 		this.trening_id=trening_id;
 		this.dato=dato;
 		this.tidspunkt=tidspunkt;
@@ -41,6 +47,13 @@ public abstract class Treningsokt{
 		}else{
 			this.prestasjon=prestasjon;
 		}
+		this.ovelser = new ArrayList<Ovelse>(ovelser);
 		this.notat=notat;
 	}
-}
+	public Treningsokt(long trening_id,Date dato, Time tidspunkt, long varighet, int form,int prestasjon,String notat) throws IndexOutOfBoundsException{
+		this(trening_id,dato,tidspunkt,varighet,form,prestasjon,notat,new ArrayList<Ovelse>());
+	}
+	public void addOvelse(Ovelse o){
+		this.ovelser.add(o);
+	}
+}	

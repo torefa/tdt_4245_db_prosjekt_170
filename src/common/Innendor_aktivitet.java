@@ -1,7 +1,7 @@
-package program;
+package common;
 
 import java.sql.Time;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * Represents the corresponding table in the database.
@@ -9,8 +9,8 @@ import java.util.Date;
  * @author Group 170
  */
 public class Innendor_aktivitet extends Treningsokt{
-	long publikum;
-	int luft;
+	public long publikum;
+	public int luft;
 	
 	/**
 	* Creates a indoor activity.
