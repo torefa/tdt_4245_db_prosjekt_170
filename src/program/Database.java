@@ -24,19 +24,8 @@ import common.*;
  */
 public class Database implements AutoCloseable {
 	private Connection conn = null;
-	private static String KEY_URL = DatabaseKey_example.KEY_URL;
-	/*
-	public static void main(String args[]){
-		
-		Database d = new Database();
-		d.connect();
-		for(Kategori i : d.getKategorier()){
-			System.out.println(i.getFullName());
-		}
-		Utendor_aktivitet aktivitet = new Utendor_aktivitet(-1,new Date(2018,3,20),(Time) Time.valueOf("13:0:0"),10,10,10,"",20,"Sol");
-		Ovelse test = new Styrke_ovelse(-1,"Test","", 10, 10, 10);
-		d.insertTreningsOkt(aktivitet);
-	}*/	
+	private static String KEY_URL = DatabaseKey.KEY_URL;
+
 	
 	/**
 	 * Establishes connection to the MySQL server.
@@ -71,7 +60,7 @@ public class Database implements AutoCloseable {
 			String query = "";
 			
 			MessageFormat ovingTemplate = new MessageFormat(
-				"insert into `Ã¸ving`(`navn`,`beskrivelse`) values(\"{0}\",\"{1}\");"	
+				"insert into `øving`(`navn`,`beskrivelse`) values(\"{0}\",\"{1}\");"	
 			);
 			query = ovingTemplate.format(new Object[]{o.navn,o.beskrivelse});
 			if(!st1.execute(query)){
@@ -80,20 +69,20 @@ public class Database implements AutoCloseable {
 				// huehue so good at else if fite me irl.
 				if( o instanceof Utholdenhet_ovelse){
 					ovingSubTemplate = new MessageFormat(
-							"insert into `utholdenhet_Ã¸velse`(`id_Ã¸velse`,`distanse_km`,`tid_min`) values(LAST_INSERT_ID(),{0},{1});"
+							"insert into `utholdenhet_øvelse`(`id_øvelse`,`distanse_km`,`tid_min`) values(LAST_INSERT_ID(),{0},{1});"
 					);
 					Utholdenhet_ovelse ov = (Utholdenhet_ovelse) o;
 					query = ovingSubTemplate.format(new Object[]{ov.distanse_km,ov.tid_min});
 				}else if(o instanceof Styrke_ovelse){
 					ovingSubTemplate = new MessageFormat(
-							"insert into `styrke_kond_Ã¸velse`(`id_Ã¸velse`,`belastning`,`type`,`repitisjoner`,`sett`) values(LAST_INSERT_ID(),{0},\"{1}\",{2},{3});"
+							"insert into `styrke_kond_øvelse`(`id_øvelse`,`belastning`,`type`,`repitisjoner`,`sett`) values(LAST_INSERT_ID(),{0},\"{1}\",{2},{3});"
 					);
 					Styrke_ovelse ov = (Styrke_ovelse)o;
 					query = ovingSubTemplate.format(new Object[]{ov.belastning, "Styrke", ov.repetisjoner, ov.sett});
 					
 				}else{
 					ovingSubTemplate = new MessageFormat(
-							"insert into `styrke_kond_Ã¸velse`(`id_Ã¸velse`,`belastning`,`type`,`repitisjoner`,`sett`) values(LAST_INSERT_ID(),{0},\"{1}\",{2},{3});"
+							"insert into `styrke_kond_øvelse`(`id_øvelse`,`belastning`,`type`,`repitisjoner`,`sett`) values(LAST_INSERT_ID(),{0},\"{1}\",{2},{3});"
 					);
 					Kondisjon_ovelse ov = (Kondisjon_ovelse)o;
 					query = ovingSubTemplate.format(new Object[]{ov.belastning, "Kondisjon", ov.repetisjoner, ov.sett});
@@ -101,9 +90,9 @@ public class Database implements AutoCloseable {
 				
 				st2.executeUpdate(query);
 				
-				// create Ã¸velse_har_kategori object
+				// create øvelse_har_kategori object
 				MessageFormat ohkTemplate = new MessageFormat(
-						"insert into `Ã¸velse_har_kategori`(`id_Ã¸velse`,`id_kategori`) values(LAST_INSERT_ID(),{0});"
+						"insert into `øvelse_har_kategori`(`id_øvelse`,`id_kategori`) values(LAST_INSERT_ID(),{0});"
 				);
 				query = ohkTemplate.format(new Object[]{o.kategori});
 				st3.executeUpdate(query);
@@ -130,35 +119,35 @@ public class Database implements AutoCloseable {
 			
 			String query = "";
 			MessageFormat treningTemplate = new MessageFormat(
-				"insert into `treningsÃ¸kt`(`dato`,`varighet`,`prestasjon`,`notat`,`form`) values(\"{0}\",{1},{2},\"{3}\",\"{4}\");"
+				"insert into `treningsøkt`(`dato`,`varighet`,`prestasjon`,`notat`,`form`) values(\"{0}\",{1},{2},\"{3}\",\"{4}\");"
 			);
 			MessageFormat ovingTemplate = new MessageFormat(
-				"insert into `treningsÃ¸kt_har_Ã¸ving`(`id_trening`,`id_Ã¸ving`) values(LAST_INSERT_ID(),{0});"
+				"insert into `treningsøkt_har_øving`(`id_trening`,`id_øving`) values(LAST_INSERT_ID(),{0});"
 			);
 			//String datestring = new SimpleDateFormat("dd/mm/yyyy",Locale.ENGLISH).format(t.dato);
 			query = treningTemplate.format(new Object[]{t.dato,t.varighet,t.prestasjon,t.notat,t.form});
-			/*For each Ã¸velse in treningsOkt*/
-			//System.out.println("making Ã¸kt");
+			/*For each øvelse in treningsOkt*/
+			System.out.println("making økt");
 			if(!st1.execute(query)){
-				//System.out.println("Ã¸kt made");
+				System.out.println("økt made");
 				for(Ovelse o : t.ovelser){
-					//System.out.println("hmm");
-					// TODO: workaround when a treningsÃ¸kt has same ovelser multiple times -> duplicate primary key
+					System.out.println("hmm");
+					// TODO: workaround when a treningsøkt has same ovelser multiple times -> duplicate primary key
 					query = ovingTemplate.format(new Object[]{o.ovelse_id});
 					Statement st3 = conn.createStatement();
 					st3.execute(query);
 				}
 				
-				// TODO: utendÃ¸r/innendÃ¸r
+				// TODO: utendør/innendør
 				if(t instanceof Innendor_aktivitet){
 					MessageFormat innendorQ = new MessageFormat(
-						"insert into `innendÃ¸r_aktivitet`(`id_treningsÃ¸kt`,`ventilasjon`,`antall_tilskuere`) values(LAST_INSERT_ID(),{0},{1});"
+						"insert into `innendør_aktivitet`(`id_treningsøkt`,`ventilasjon`,`antall_tilskuere`) values(LAST_INSERT_ID(),{0},{1});"
 					);
 					Innendor_aktivitet in = (Innendor_aktivitet)t;
 					query = innendorQ.format(new Object[]{in.luft, in.publikum});
 				}else{
 					MessageFormat utendorQ = new MessageFormat(
-						"insert into `utendÃ¸r_aktivitet`(`id_treningsÃ¸kt`, `temperatur`, `vÃ¦retype`) values(LAST_INSERT_ID(),{0},\"{1}\")"
+						"insert into `utendør_aktivitet`(`id_treningsøkt`, `temperatur`, `væretype`) values(LAST_INSERT_ID(),{0},\"{1}\")"
 					);
 					Utendor_aktivitet ut = (Utendor_aktivitet)t;
 					query = utendorQ.format(new Object[]{ut.temperatur, ut.vaertype});
@@ -192,10 +181,10 @@ public class Database implements AutoCloseable {
 		List<Ovelse> ret = new ArrayList<Ovelse>();
 		try(Statement st = conn.createStatement()){
 			
-			String query1 = "select * from `Ã¸ving`";
-			MessageFormat query2 = new MessageFormat("select * from `Ã¸velse_har_kategori` where `id_Ã¸velse` = {0}");
-			MessageFormat query3 = new MessageFormat("select * from `styrke_kond_Ã¸velse` where `id_Ã¸velse` = {0}");
-			MessageFormat query4 = new MessageFormat("select * from `utholdenhet_Ã¸velse` where `id_Ã¸velse` = {0}");
+			String query1 = "select * from `øving`";
+			MessageFormat query2 = new MessageFormat("select * from `øvelse_har_kategori` where `id_øvelse` = {0}");
+			MessageFormat query3 = new MessageFormat("select * from `styrke_kond_øvelse` where `id_øvelse` = {0}");
+			MessageFormat query4 = new MessageFormat("select * from `utholdenhet_øvelse` where `id_øvelse` = {0}");
 			if(st.execute(query1)){
 				ResultSet set = st.getResultSet();
 				while(set.next()){
