@@ -1,0 +1,47 @@
+Four use cases are described here:
+
+1) Add a new exercise
+For this usecase we only need the coullumn bellow "Øvelse". Here do the following:
+- Put a one-word-description of the exercise in the field "Navn" 
+- Put a detailed description to "Beskrivelse" 
+- Choose the category the exercise belongs to from the dropdown menu "Kategori" 
+- Choose the type of the exercise from the dropdown menu "Type"
+
+Afterwards fill in the new fields, they have the following meaning:
+- Belastning: Weight that was used for this exercise.
+- Repetisjoner: Number of repetitions of the exercise per {@link sett}.
+- Sett: Number of sets of the exercise.
+
+- Distanse: Distance of exercise in km.
+- Tid: Time of exercise in minutes.
+
+Now press the button "Legg til øvelse Label" and you are done.
+
+2)Add a new workout (At least one exercise has to successfully added beforehand)
+For this usecase we first only need the coullumn bellow "Øvelse". Here do the following:
+- Put a one-word-description of the exercise in the field "Navn" 
+- Pick the date when the workout started from the field "Dato"
+- Pick the time when the workout started from the field "Tidspunkt"
+- Put the total duratio of the workout in the field "Varighet"
+- Rate your form with a number from 1 to 10 and choose the result from the dropdown menu "Form"
+- Rate your performance with a number from 1 to 10 and choose the result from the dropdown menu "Prestasjon"
+- If you want to add any notes to the exercise add those into the field "Notat"
+- Choose wether it was in an indoor (Innendor) ot outdoor (Utendor) workout from the dropdown menu Type aktivitet 
+
+Afterwards fill in the new fields, they have the following meaning:
+- Publikum: Number of people watched you doing the workout.
+- Luft: Climate conditions of the workout place.
+
+- Temperatur: Average temperature during the workout in celsius.
+- Vaertype: Weather condition during workout.
+
+Now select one after another all (at least one) exercises you want to add to the workout from the list below "Tidligere øvelser" and press the button "Legg til treningsøkt". After you have finnished press the button "Registrer økt" and you are done.
+
+3)List all existing workouts
+Press the button "slett" below the field in the coullumn "Øvelser lagt til i treningsøkter" and you are done.
+
+4)Add exercise to workout
+First go through usecase "List all existing workouts", then select the workout you want to add an exercise to. Now select one after another all (at least one) exercises you want to add to the workout from the list below "Tidligere øvelser" and press the button "Legg til treningsøkt". After you have finnished press the button "Registrer økt" and you are done.
+
+5)List all existing exercises
+There is nothing to do, all exercises can be found in the collumn below "Tidligere øvelser".
