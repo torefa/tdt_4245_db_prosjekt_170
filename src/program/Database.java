@@ -18,10 +18,13 @@ import java.util.Map;
 
 import common.*;
 
-
+/**
+ * Interaface between Java and MySQL.
+ * Tranlates the database querries to MySQL querries and sends them to the server.
+ */
 public class Database implements AutoCloseable {
 	private Connection conn = null;
-	private static String KEY_URL = DatabaseKey.KEY_URL;
+	private static String KEY_URL = DatabaseKey_example.KEY_URL;
 	/*
 	public static void main(String args[]){
 		
@@ -33,7 +36,14 @@ public class Database implements AutoCloseable {
 		Utendor_aktivitet aktivitet = new Utendor_aktivitet(-1,new Date(2018,3,20),(Time) Time.valueOf("13:0:0"),10,10,10,"",20,"Sol");
 		Ovelse test = new Styrke_ovelse(-1,"Test","", 10, 10, 10);
 		d.insertTreningsOkt(aktivitet);
-	}*/
+	}*/	
+	
+	/**
+	 * Establishes connection to the MySQL server.
+	 *
+	 * @author Group 170
+	 * @return True if successfull, false otherwise.
+	 */
 	public boolean connect() {
 		try {
 			conn = DriverManager.getConnection(KEY_URL);
@@ -45,7 +55,12 @@ public class Database implements AutoCloseable {
 		return true;
 	}
 
-	
+	/**
+	 * Adds a given java object exercise to the database.
+	 *
+	 * @author Group 170
+	 * @param o Java object exercise to be added to the database.
+	 */
 	public void insertOving(Ovelse o){
 		
 		try{
@@ -56,7 +71,7 @@ public class Database implements AutoCloseable {
 			String query = "";
 			
 			MessageFormat ovingTemplate = new MessageFormat(
-				"insert into `øving`(`navn`,`beskrivelse`) values(\"{0}\",\"{1}\");"	
+				"insert into `Ã¸ving`(`navn`,`beskrivelse`) values(\"{0}\",\"{1}\");"	
 			);
 			query = ovingTemplate.format(new Object[]{o.navn,o.beskrivelse});
 			if(!st1.execute(query)){
@@ -65,20 +80,20 @@ public class Database implements AutoCloseable {
 				// huehue so good at else if fite me irl.
 				if( o instanceof Utholdenhet_ovelse){
 					ovingSubTemplate = new MessageFormat(
-							"insert into `utholdenhet_øvelse`(`id_øvelse`,`distanse_km`,`tid_min`) values(LAST_INSERT_ID(),{0},{1});"
+							"insert into `utholdenhet_Ã¸velse`(`id_Ã¸velse`,`distanse_km`,`tid_min`) values(LAST_INSERT_ID(),{0},{1});"
 					);
 					Utholdenhet_ovelse ov = (Utholdenhet_ovelse) o;
 					query = ovingSubTemplate.format(new Object[]{ov.distanse_km,ov.tid_min});
 				}else if(o instanceof Styrke_ovelse){
 					ovingSubTemplate = new MessageFormat(
-							"insert into `styrke_kond_øvelse`(`id_øvelse`,`belastning`,`type`,`repitisjoner`,`sett`) values(LAST_INSERT_ID(),{0},\"{1}\",{2},{3});"
+							"insert into `styrke_kond_Ã¸velse`(`id_Ã¸velse`,`belastning`,`type`,`repitisjoner`,`sett`) values(LAST_INSERT_ID(),{0},\"{1}\",{2},{3});"
 					);
 					Styrke_ovelse ov = (Styrke_ovelse)o;
 					query = ovingSubTemplate.format(new Object[]{ov.belastning, "Styrke", ov.repetisjoner, ov.sett});
 					
 				}else{
 					ovingSubTemplate = new MessageFormat(
-							"insert into `styrke_kond_øvelse`(`id_øvelse`,`belastning`,`type`,`repitisjoner`,`sett`) values(LAST_INSERT_ID(),{0},\"{1}\",{2},{3});"
+							"insert into `styrke_kond_Ã¸velse`(`id_Ã¸velse`,`belastning`,`type`,`repitisjoner`,`sett`) values(LAST_INSERT_ID(),{0},\"{1}\",{2},{3});"
 					);
 					Kondisjon_ovelse ov = (Kondisjon_ovelse)o;
 					query = ovingSubTemplate.format(new Object[]{ov.belastning, "Kondisjon", ov.repetisjoner, ov.sett});
@@ -86,9 +101,9 @@ public class Database implements AutoCloseable {
 				
 				st2.executeUpdate(query);
 				
-				// create øvelse_har_kategori object
+				// create Ã¸velse_har_kategori object
 				MessageFormat ohkTemplate = new MessageFormat(
-						"insert into `øvelse_har_kategori`(`id_øvelse`,`id_kategori`) values(LAST_INSERT_ID(),{0});"
+						"insert into `Ã¸velse_har_kategori`(`id_Ã¸velse`,`id_kategori`) values(LAST_INSERT_ID(),{0});"
 				);
 				query = ohkTemplate.format(new Object[]{o.kategori});
 				st3.executeUpdate(query);
@@ -99,6 +114,13 @@ public class Database implements AutoCloseable {
 		}
 	}
 	
+	/**
+	 * Adds a given java object workout to the database.
+	 *
+	 * @author Group 170
+	 * @param t Java object workout to be added to the database.
+	 * @return Boolean as int, 1 if querry worked without problem, 0 in case something didn't go as expected.
+	 */
 	public int insertTreningsOkt(Treningsokt t){
 		
 		try{
@@ -108,35 +130,35 @@ public class Database implements AutoCloseable {
 			
 			String query = "";
 			MessageFormat treningTemplate = new MessageFormat(
-				"insert into `treningsøkt`(`dato`,`varighet`,`prestasjon`,`notat`,`form`) values(\"{0}\",{1},{2},\"{3}\",\"{4}\");"
+				"insert into `treningsÃ¸kt`(`dato`,`varighet`,`prestasjon`,`notat`,`form`) values(\"{0}\",{1},{2},\"{3}\",\"{4}\");"
 			);
 			MessageFormat ovingTemplate = new MessageFormat(
-				"insert into `treningsøkt_har_øving`(`id_trening`,`id_øving`) values(LAST_INSERT_ID(),{0});"
+				"insert into `treningsÃ¸kt_har_Ã¸ving`(`id_trening`,`id_Ã¸ving`) values(LAST_INSERT_ID(),{0});"
 			);
 			//String datestring = new SimpleDateFormat("dd/mm/yyyy",Locale.ENGLISH).format(t.dato);
 			query = treningTemplate.format(new Object[]{t.dato,t.varighet,t.prestasjon,t.notat,t.form});
-			/*For each øvelse in treningsOkt*/
-			System.out.println("making økt");
+			/*For each Ã¸velse in treningsOkt*/
+			//System.out.println("making Ã¸kt");
 			if(!st1.execute(query)){
-				System.out.println("økt made");
+				//System.out.println("Ã¸kt made");
 				for(Ovelse o : t.ovelser){
-					System.out.println("hmm");
-					// TODO: workaround when a treningsøkt has same ovelser multiple times -> duplicate primary key
+					//System.out.println("hmm");
+					// TODO: workaround when a treningsÃ¸kt has same ovelser multiple times -> duplicate primary key
 					query = ovingTemplate.format(new Object[]{o.ovelse_id});
 					Statement st3 = conn.createStatement();
 					st3.execute(query);
 				}
 				
-				// TODO: utendør/innendør
+				// TODO: utendÃ¸r/innendÃ¸r
 				if(t instanceof Innendor_aktivitet){
 					MessageFormat innendorQ = new MessageFormat(
-						"insert into `innendør_aktivitet`(`id_treningsøkt`,`ventilasjon`,`antall_tilskuere`) values(LAST_INSERT_ID(),{0},{1});"
+						"insert into `innendÃ¸r_aktivitet`(`id_treningsÃ¸kt`,`ventilasjon`,`antall_tilskuere`) values(LAST_INSERT_ID(),{0},{1});"
 					);
 					Innendor_aktivitet in = (Innendor_aktivitet)t;
 					query = innendorQ.format(new Object[]{in.luft, in.publikum});
 				}else{
 					MessageFormat utendorQ = new MessageFormat(
-						"insert into `utendør_aktivitet`(`id_treningsøkt`, `temperatur`, `væretype`) values(LAST_INSERT_ID(),{0},\"{1}\")"
+						"insert into `utendÃ¸r_aktivitet`(`id_treningsÃ¸kt`, `temperatur`, `vÃ¦retype`) values(LAST_INSERT_ID(),{0},\"{1}\")"
 					);
 					Utendor_aktivitet ut = (Utendor_aktivitet)t;
 					query = utendorQ.format(new Object[]{ut.temperatur, ut.vaertype});
@@ -149,18 +171,31 @@ public class Database implements AutoCloseable {
 		}
 		return 1;
 	}
+	
+	/**
+	 * Returns null.
+	 *
+	 * @author Group 170
+	 * @return null
+	 */
 	public Kategori parseKat(){
 		return null;
 	}
-	//Return a list of ovelser
+	
+	/**
+	 * Puts all exercises from the MySQL database to a list.
+	 *
+	 * @author Group 170
+	 * @return List with all exercises in MySQL database.
+	 */
 	public List<Ovelse> getOvelser(){
 		List<Ovelse> ret = new ArrayList<Ovelse>();
 		try(Statement st = conn.createStatement()){
 			
-			String query1 = "select * from `øving`";
-			MessageFormat query2 = new MessageFormat("select * from `øvelse_har_kategori` where `id_øvelse` = {0}");
-			MessageFormat query3 = new MessageFormat("select * from `styrke_kond_øvelse` where `id_øvelse` = {0}");
-			MessageFormat query4 = new MessageFormat("select * from `utholdenhet_øvelse` where `id_øvelse` = {0}");
+			String query1 = "select * from `Ã¸ving`";
+			MessageFormat query2 = new MessageFormat("select * from `Ã¸velse_har_kategori` where `id_Ã¸velse` = {0}");
+			MessageFormat query3 = new MessageFormat("select * from `styrke_kond_Ã¸velse` where `id_Ã¸velse` = {0}");
+			MessageFormat query4 = new MessageFormat("select * from `utholdenhet_Ã¸velse` where `id_Ã¸velse` = {0}");
 			if(st.execute(query1)){
 				ResultSet set = st.getResultSet();
 				while(set.next()){
@@ -214,6 +249,13 @@ public class Database implements AutoCloseable {
 		
 		return ret;
 	}
+	
+	/**
+	 * Puts all categories from the MySQL database to a list.
+	 *
+	 * @author Group 170
+	 * @return List with all categories in MySQL database.
+	 */
 	public List<Kategori> getKategorier(){
 		List<Kategori> ret = new ArrayList<Kategori>();
 		//Id, kat map
@@ -248,6 +290,11 @@ public class Database implements AutoCloseable {
 		return ret;
 	}
 	
+	/**
+	 * Disconnects the database before closing.
+	 *
+	 * @author Group 170
+	 */
 	@Override
 	public void close() {
 		try {

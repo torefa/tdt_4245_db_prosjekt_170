@@ -14,6 +14,9 @@ public class Utholdenhet_ovelse extends Ovelse{
 	* Creates a new kondition exercise.
 	*
 	* @author Group 170
+	* @param ovelse_id Unique key in database.
+	* @param navn One word description of exercise.
+	* @param beskrivelse Detailed description of exercise.
 	* @param distanse_km Distance of exercise in km.
 	* @param tid_min Time of exercise in minutes.
 	*/

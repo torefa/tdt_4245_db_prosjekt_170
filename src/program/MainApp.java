@@ -8,11 +8,30 @@ import javafx.scene.Scene;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 
+/**
+ * Main class to start the program.
+ * Loads the GUI and connects it to its controller. The controller takes over all the work afterwards.
+ *
+ * @author Group 170
+ */
 public class MainApp extends Application{
 	
+	/**
+	* Will be ignored.
+	* If not will it just call the start function through launch from {@link Application}
+	*
+	* @author Group 170
+	* @param args Starting parameters, will be ignored.
+	*/
 	public static void main(String[] args){
 		launch(MainApp.class, args);
 	}
+	
+	/**
+	* Loads the GUI and connects it to its controller.
+	*
+	* @author Group 170
+	*/
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		primaryStage = primaryStage;
@@ -34,7 +53,7 @@ public class MainApp extends Application{
 			primaryStage.show();
 			
 			// give controller access to main app, so we can point at database etc
-			AppBinder controller = loader.getController();
+			// AppBinder controller = loader.getController();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -22,18 +22,18 @@ public abstract class Treningsokt{
 	public String notat;
 	public List<Ovelse> ovelser;
 	
-
 	/**
 	* Creates an activity.
 	*
 	* @author Group 170
-	* @param trening_id Unic number in database.
+	* @param trening_id Unique key in database.
 	* @param dato Starting date of workout.
 	* @param tidspunkt Startin time of workout.
 	* @param varighet Total time of the workout.
 	* @param form Rating of the shape the person was in.
 	* @param prestasjon Rating of how well the workout was done.
 	* @param notat Option to add arbitrary notes to the workout.
+	* @param ovelser List of all exercises collected in this workout.
 	*/
 	public Treningsokt(long trening_id,Date dato, Time tidspunkt, long varighet, int form,int prestasjon,String notat,List<Ovelse> ovelser) throws IndexOutOfBoundsException{
 
@@ -50,6 +50,19 @@ public abstract class Treningsokt{
 		this.ovelser = new ArrayList<Ovelse>(ovelser);
 		this.notat=notat;
 	}
+
+	/**
+	* Creates an activity.
+	*
+	* @author Group 170
+	* @param trening_id Unique key in database.
+	* @param dato Starting date of workout.
+	* @param tidspunkt Startin time of workout.
+	* @param varighet Total time of the workout.
+	* @param form Rating of the shape the person was in.
+	* @param prestasjon Rating of how well the workout was done.
+	* @param notat Option to add arbitrary notes to the workout.
+	*/
 	public Treningsokt(long trening_id,Date dato, Time tidspunkt, long varighet, int form,int prestasjon,String notat) throws IndexOutOfBoundsException{
 		this(trening_id,dato,tidspunkt,varighet,form,prestasjon,notat,new ArrayList<Ovelse>());
 	}

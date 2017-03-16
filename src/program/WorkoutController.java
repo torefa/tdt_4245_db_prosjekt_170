@@ -33,6 +33,21 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.util.Callback;
 
+
+
+/**
+* Interface between the GUI and the Database.
+* In this class all usecases that are possible from the interface we be translated into corresponding database querries. Thereby the following usecases are possible:
+* <ul>
+*	<li>Add a new workout</li>
+*	<li>Add a new exercise</li>
+*	<li>Add an exercise to a workout</li>
+*	<li>List all existing workouts</li>
+*	<li>List all existing exercises</li>
+* </ul>
+*
+* @author Group 170
+*/
 public class WorkoutController implements AppBinder{
 	
 	// error labels
@@ -68,11 +83,11 @@ public class WorkoutController implements AppBinder{
 	@FXML TextField innendor_publikum;
 	@FXML ChoiceBox<Integer> innendor_luft;
 	
-	// "Øvelser lagt til i treningsøkten" pane
+	// "Ã˜velser lagt til i treningsÃ¸kten" pane
 	@FXML ListView<Ovelse> ovelserIn;
 	@FXML Button slettOvelseIn;
 	
-	// Øvelse creation pane
+	// Ã˜velse creation pane
 	@FXML TextField ovelse_navn;
 	@FXML TextArea ovelse_beskrivelse;
 	@FXML ChoiceBox<Kategori> kategori;
@@ -99,13 +114,13 @@ public class WorkoutController implements AppBinder{
 	
 	@FXML Button registrer_ovelse;
 	
-	// "Tidliger øvelser" pane
+	// "Tidliger Ã¸velser" pane
 	@FXML ListView<Ovelse> ovelserOut;
 	//@FXML Button slettOvelseOut;
 	@FXML Button leggTilIn;
 	
 	/**
-	* Initializes and set values to the db_prosjekt_gui.
+	* Initializes and sets values to the db_prosjekt_gui.
 	*
 	* @author Group 170
 	*/
@@ -187,7 +202,7 @@ public class WorkoutController implements AppBinder{
 		innendor_luft.setItems(oneToTen);
 		
 		type_aktivitet.setItems(FXCollections.observableArrayList(
-				"Innendørs", "Utendørs"));
+				"InnendÃ¸rs", "UtendÃ¸rs"));
 		
 		// Visibility dependent on 'type_aktivitet'
 		utendor_pane.setVisible(false);
@@ -361,16 +376,17 @@ public class WorkoutController implements AppBinder{
 	* Adds kategories from the kategori list in the gui to the database.
 	*
 	* @author Group 170
+	* @param kategorier Kategories to be added.
 	*/
 	public void updateKategori(List<Kategori> kategorier){
 		kategori.setItems(FXCollections.observableArrayList(kategorier));
-		
 	}
 	
 	/**
 	* Adds ovelser from the ovelser list in the gui to the database.
 	*
 	* @author Group 170
+	* @param ovelser Exercises to be added.
 	*/
 	public void updatePrevOvelse(Collection<Ovelse> ovelser){
 		ovOutCollection = FXCollections.observableArrayList(ovelser);
@@ -426,8 +442,8 @@ public class WorkoutController implements AppBinder{
 		//System.out.println(ovelser.size());
 		
 		switch(activ){
-		//"Innendørs", "Utendørs")
-			case "Innendørs":
+		//"InnendÃ¸rs", "UtendÃ¸rs")
+			case "InnendÃ¸rs":
 				// create innendor activitet'
 				long pub = Long.parseLong(innendor_publikum.getText());
 				int luft = innendor_luft.getValue();
@@ -442,8 +458,8 @@ public class WorkoutController implements AppBinder{
 				
 				db.insertTreningsOkt(innen);
 				break;
-			case "Utendørs":
-				// create utendørs
+			case "UtendÃ¸rs":
+				// create utendÃ¸rs
 				long temp = Long.parseLong(utendor_temp.getText());
 				String vaer = utendor_vaer.getText();
 				
@@ -526,13 +542,13 @@ public class WorkoutController implements AppBinder{
 	* @author Group 170
 	*/
 	private void showTrenTypeField(){
-		// "Innendørs", "Utendørs"
+		// "InnendÃ¸rs", "UtendÃ¸rs"
 		switch(type_aktivitet.getValue()){
-			case "Innendørs":
+			case "InnendÃ¸rs":
 				utendor_pane.setVisible(false);
 				innendor_pane.setVisible(true);
 				break;
-			case "Utendørs":
+			case "UtendÃ¸rs":
 				utendor_pane.setVisible(true);
 				innendor_pane.setVisible(false);
 				break;

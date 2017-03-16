@@ -15,7 +15,14 @@ public class Utendor_aktivitet extends Treningsokt{
 	/**
 	* Creates a outdoor activity.
 	*
-	* @author Group 170
+	* @author Group 
+	* @param trening_id Unique key in database.
+	* @param dato Starting date of workout.
+	* @param tidspunkt Startin time of workout.
+	* @param varighet Total time of the workout.
+	* @param form Rating of the shape the person was in.
+	* @param prestasjon Rating of how well the workout was done.
+	* @param notat Option to add arbitrary notes to the workout.
 	* @param temperatur Average temperature during the workout in celsius.
 	* @param vaertype Weather condition during workout.
 	*/
