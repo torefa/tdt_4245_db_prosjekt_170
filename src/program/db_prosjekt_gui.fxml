@@ -119,8 +119,7 @@
          <children>
             <ListView fx:id="ovelserOut" layoutY="53.0" prefHeight="317.0" prefWidth="200.0" />
             <Label layoutX="57.0" layoutY="14.0" text="Tidligere øvelser" />
-            <Button fx:id="slettOvelseOut" layoutX="14.0" layoutY="383.0" mnemonicParsing="false" text="Slett" />
-            <Button fx:id="leggTilIn" layoutX="67.0" layoutY="383.0" mnemonicParsing="false" text="Legg til treningsøkt" />
+            <Button fx:id="leggTilIn" layoutX="41.0" layoutY="381.0" mnemonicParsing="false" text="Legg til treningsøkt" />
          </children>
       </Pane>
    </children>

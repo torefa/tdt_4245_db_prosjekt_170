@@ -104,6 +104,7 @@ public class Database implements AutoCloseable {
 		try{
 			Statement st1 = conn.createStatement();
 			Statement st2 = conn.createStatement();
+			Statement st4 = conn.createStatement();
 			
 			String query = "";
 			MessageFormat treningTemplate = new MessageFormat(
@@ -124,17 +125,23 @@ public class Database implements AutoCloseable {
 					query = ovingTemplate.format(new Object[]{o.ovelse_id});
 					Statement st3 = conn.createStatement();
 					st3.execute(query);
-					//if(!st3.execute(query)){break;}
 				}
 				
 				// TODO: utendør/innendør
-				/*query = "SET i_id = LAST_INSERT_ID();";
-				if(st2.execute(query)){
-					System.out.println("set id");
-					query = "";
-					
-						
-				}*/
+				if(t instanceof Innendor_aktivitet){
+					MessageFormat innendorQ = new MessageFormat(
+						"insert into `innendør_aktivitet`(`id_treningsøkt`,`ventilasjon`,`antall_tilskuere`) values(LAST_INSERT_ID(),{0},{1});"
+					);
+					Innendor_aktivitet in = (Innendor_aktivitet)t;
+					query = innendorQ.format(new Object[]{in.luft, in.publikum});
+				}else{
+					MessageFormat utendorQ = new MessageFormat(
+						"insert into `utendør_aktivitet`(`id_treningsøkt`, `temperatur`, `væretype`) values(LAST_INSERT_ID(),{0},\"{1}\")"
+					);
+					Utendor_aktivitet ut = (Utendor_aktivitet)t;
+					query = utendorQ.format(new Object[]{ut.temperatur, ut.vaertype});
+				}
+				st4.executeUpdate(query);
 				return 0;
 			}
 		}catch(SQLException ex){

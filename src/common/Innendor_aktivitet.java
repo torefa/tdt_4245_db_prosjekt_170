@@ -9,8 +9,8 @@ import java.sql.Date;
  * @author Group 170
  */
 public class Innendor_aktivitet extends Treningsokt{
-	long publikum;
-	int luft;
+	public long publikum;
+	public int luft;
 	
 	/**
 	* Creates a indoor activity.

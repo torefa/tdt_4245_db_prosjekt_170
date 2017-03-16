@@ -9,8 +9,8 @@ import java.sql.Date;
  * @author Group 170
  */
 public class Utendor_aktivitet extends Treningsokt{
-	long temperatur;
-	String vaertype;
+	public long temperatur;
+	public String vaertype;
 	
 	/**
 	* Creates a outdoor activity.

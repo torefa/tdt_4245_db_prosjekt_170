@@ -2,6 +2,8 @@ package program;
 
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -23,21 +25,23 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import javafx.util.Callback;
 
 public class WorkoutController implements AppBinder{
 	
 	
 	// TODO: innendør/utendør aktivitet registrering for treningsøkt
-	// TODO: fiks varighet
 
 	MainApp main;
 	Database db;
 	// attributes to make life easier
 	ObservableList<Ovelse> ovInCollection = FXCollections.observableArrayList();
+	ObservableList<Ovelse> ovOutCollection = FXCollections.observableArrayList();
 	
 	// Treningsokt pane
 	@FXML TextField treningsokt_navn;
@@ -94,7 +98,7 @@ public class WorkoutController implements AppBinder{
 	
 	// "Tidliger øvelser" pane
 	@FXML ListView<Ovelse> ovelserOut;
-	@FXML Button slettOvelseOut;
+	//@FXML Button slettOvelseOut;
 	@FXML Button leggTilIn;
 	
 	/**
@@ -198,8 +202,6 @@ public class WorkoutController implements AppBinder{
 				(observable, oldValue, newValue) -> showInputField());
 		
 		
-		// TODO: set kategori ChoiceBox
-		
 		// Sets the type of ovelse in the choicebox
 		ObservableList<String> ovelseType = FXCollections.observableArrayList(
 				"Styrke", "Kondisjon", "Utholdenhet");
@@ -285,9 +287,67 @@ public class WorkoutController implements AppBinder{
 		// deletes ovelse from current workout.
 		slettOvelseIn.setOnAction(e -> removeOvelseIn(ovelserIn.getSelectionModel().getSelectedItem()));
 		// deletes ovelse from database and prev ovelse
-		slettOvelseOut.setOnAction(e -> removeOvelseOut(ovelserOut.getSelectionModel().getSelectedItem()));
+		//slettOvelseOut.setOnAction(e -> removeOvelseOut(ovelserOut.getSelectionModel().getSelectedItem()));
 		// creates workout object and sends in a collection with ovelser to database object
 		registrer_okt.setOnAction(e -> createWorkout());
+		
+		
+		
+		// listview customization
+		// ov in
+		ovelserIn.setCellFactory(new Callback<ListView<Ovelse>, ListCell<Ovelse>>(){
+			 
+            @Override
+            public ListCell<Ovelse> call(ListView<Ovelse> p) {
+                 
+                ListCell<Ovelse> cell = new ListCell<Ovelse>(){
+ 
+                    @Override
+                    protected void updateItem(Ovelse o, boolean empty) {
+                        super.updateItem(o, empty);
+                        String t = null;
+                        if (o == null || empty) {
+                        	
+                        }else{
+                        	t = o.navn +": "+ o.beskrivelse;
+                        }
+                        
+                        setText(t);
+                        setGraphic(null);
+                    }
+ 
+                };
+                 
+                return cell;
+            }
+        });
+		ovelserOut.setCellFactory(new Callback<ListView<Ovelse>, ListCell<Ovelse>>(){
+			 
+            @Override
+            public ListCell<Ovelse> call(ListView<Ovelse> p) {
+                 
+                ListCell<Ovelse> cell = new ListCell<Ovelse>(){
+ 
+                    @Override
+                    protected void updateItem(Ovelse o, boolean empty) {
+                        super.updateItem(o, empty);
+                        String t = null;
+                        if (o == null || empty) {
+                        	
+                        }else{
+                        	t = o.navn +": "+ o.beskrivelse;
+                        }
+                        
+                        setText(t);
+                        setGraphic(null);
+                    }
+ 
+                };
+                 
+                return cell;
+            }
+        });
+
 	}
 	
 	/**
@@ -306,7 +366,10 @@ public class WorkoutController implements AppBinder{
 	* @author Group 170
 	*/
 	public void updatePrevOvelse(Collection<Ovelse> ovelser){
-		ovelserOut.setItems(FXCollections.observableArrayList(ovelser));
+		ovOutCollection = FXCollections.observableArrayList(ovelser);
+		ovelserOut.setItems(ovOutCollection);
+		ovInCollection.clear();
+		ovelserIn.setItems(ovInCollection);
 	}
 	
 	/**
@@ -331,7 +394,7 @@ public class WorkoutController implements AppBinder{
 		LocalDate dateLocal = dato.getValue();
 		int h = hour.getValue();
 		int m = min.getValue();
-		long duration = Integer.parseInt(varighet.getText());
+		long duration = Long.parseLong(varighet.getText());
 		int f = form.getValue();
 		int pres = prestasjon.getValue();
 		String note = notat.getText();
@@ -343,6 +406,9 @@ public class WorkoutController implements AppBinder{
 		Calendar cal = Calendar.getInstance();
 		cal.set(dateLocal.getYear(), dateLocal.getMonthValue(), dateLocal.getDayOfMonth(), h, m, 0);
 		Date dateD = Date.valueOf(dateLocal);
+		System.out.println(h);
+		long mils = dateLocal.atTime(h, m).atZone(ZoneId.of("CET")).toEpochSecond()*1000;
+		dateD.setTime(mils);
 		
 		// gets milliseconds and makes new Time object
 		Time time = new Time(cal.getTime().getTime());
@@ -398,18 +464,13 @@ public class WorkoutController implements AppBinder{
 	private void addOvelseIn(Ovelse ov){
 		if(ov == null){return;}
 		ovInCollection.add(ov);
+		ovOutCollection.remove(ov);
+		ovelserOut.setItems(ovOutCollection);
+		ovelserOut.refresh();
 		ovelserIn.setItems(ovInCollection);
 	}
 	
-	/**
-	* Adds ovelse object to the database object to remove it.
-	*
-	* @author Group 170
-	*/
-	private void removeOvelseOut(Ovelse ov){
-		if(ov == null){return;}
-		// TODO: send ovelse object to database object to remove it, and make it call updatePrevOvelse()
-	}
+
 	
 	/**
 	* Removes ovelse object from  ovInCollection and updates ovelserIn with ovInCollection.
@@ -419,7 +480,9 @@ public class WorkoutController implements AppBinder{
 	private void removeOvelseIn(Ovelse ov){
 		if(ov == null){return;}
 		ovInCollection.remove(ov);
+		ovOutCollection.add(ov);
 		ovelserIn.setItems(ovInCollection);
+		ovelserOut.setItems(ovOutCollection);
 	}
 	
 	/**
