@@ -170,8 +170,13 @@ public class Database implements AutoCloseable {
 							int belastning = st_set.getInt(2);
 							int repetisjoner= st_set.getInt(4);
 							int sett = st_set.getInt(5);
+							if(st_set.getString(3).equals("Styrke")){
+								o = new Styrke_ovelse(o_id, navn, beskrivelse, belastning, repetisjoner, sett);
+							}else{
+								o = new Kondisjon_ovelse(o_id, navn, beskrivelse, belastning, repetisjoner, sett);
+							}
 							
-							o = new Styrke_ovelse(o_id, navn, beskrivelse, belastning, repetisjoner, sett);
+							
 						}else if(st4.execute(query4.format(new Object[]{o_id}))){
 							st_set = st4.getResultSet();
 							if(st_set.next()){

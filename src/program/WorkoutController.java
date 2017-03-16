@@ -29,6 +29,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 
 public class WorkoutController implements AppBinder{
+	
+	
+	// TODO: innendør/utendør aktivitet registrering for treningsøkt
+	// TODO: fiks varighet
 
 	MainApp main;
 	Database db;
