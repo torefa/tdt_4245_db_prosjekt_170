@@ -25,6 +25,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
@@ -34,8 +35,10 @@ import javafx.util.Callback;
 
 public class WorkoutController implements AppBinder{
 	
+	// error labels
 	
-	// TODO: innendør/utendør aktivitet registrering for treningsøkt
+	@FXML Label ovFeedBack;
+	@FXML Label trenFeedBack;
 
 	MainApp main;
 	Database db;
@@ -108,6 +111,10 @@ public class WorkoutController implements AppBinder{
 	*/
 	@FXML
 	private void initialize(){
+		
+		ovFeedBack.setText("");
+		trenFeedBack.setText("");
+		
 		// treningsokt pane init
 		db = new Database();
 		if(!db.connect()){
@@ -389,7 +396,9 @@ public class WorkoutController implements AppBinder{
 	* 
 	*/
 	private void createWorkout(){
-		// TODO check if fields are empty and return if some are
+		
+		
+		trenFeedBack.setText("Trening lagd!");
 		String navn = treningsokt_navn.getText();
 		LocalDate dateLocal = dato.getValue();
 		int h = hour.getValue();
@@ -555,6 +564,8 @@ public class WorkoutController implements AppBinder{
 		String navn = ovelse_navn.getText();
 		String beskrivelse = ovelse_beskrivelse.getText();
 		Kategori kat = kategori.getValue();
+		
+		ovFeedBack.setText("Ovelse lagd!");
 		switch (type_ovelse.getValue()){
 			
 			case "Styrke":
